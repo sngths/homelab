@@ -23,6 +23,7 @@
 | 192.168.1.40 | nas | 群晖 NAS，NFS 共享给 PVE 存备份 |
 | 192.168.1.50 | dokploy（VM 200） | Docker 部署平台，Dokploy 面板 :3000 |
 | 192.168.1.51 | pbs（VM 201） | Proxmox Backup Server，网页 :8007 |
+| 192.168.1.52 | auto-win（VM 202） | Windows 11 自动化操作机（微信、Bambu Studio 等） |
 | 192.168.1.117 | DESKTOP-0GE8DG9 | 家里的 Windows 台式机，装了 wsd，是远程操作家里网络的入口 |
 | 192.168.1.155 | One-KVM | 网络 KVM（onecloud 刷机），目前接在 pve3 上 |
 
@@ -36,6 +37,7 @@
 | [pve/upgrade-8-to-9.md](pve/upgrade-8-to-9.md) | 2026-11-01 PVE 8 → 9 升级记录和踩过的坑 |
 | [services/dokploy.md](services/dokploy.md) | Docker 部署平台 |
 | [services/pbs.md](services/pbs.md) | PBS 备份服务器、备份策略 |
+| [services/auto-win.md](services/auto-win.md) | Windows 自动化操作机 |
 | [runbooks/](runbooks/) | 远程访问方式、故障处理手册 |
 | [scripts/](scripts/) | 可复用的脚本 |
 
@@ -46,6 +48,7 @@
 - [ ] 常用的虚拟机陆续加进 `daily-pbs` 备份任务
 - [ ] 清理不用的旧虚拟机（k8s 那一组、多个 win11 等）
 - [ ] pve3 安装 `intel-microcode`
+- [ ] pve3 热重启后认不到 NVMe 硬盘，待查（见 hardware/README.md），修好前重启要"关机 → 断电 → 开机"
 - [ ] pve4 若再死机：查 pve3 上的 `/var/log/netconsole-remote.log`，考虑跑 memtest
 - [ ] pve4 硬盘空闲 57°C 左右，考虑加散热片
 - [ ] 不再需要时删除临时 SSH 密钥 `claude-pve-upgrade`（见 [runbooks/access.md](runbooks/access.md)）

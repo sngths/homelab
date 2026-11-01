@@ -19,6 +19,12 @@
 | 硬盘 | KINGBANK KP230 Pro 2TB NVMe，**从坏掉的 GMKtec M5 上拆过来的** |
 | 网卡 | `eno1`（在用，MAC 30:bf:01:22:20:51）、`enp2s0`（…:52，不要同时接进网桥，会成环）、Wi-Fi |
 | 显示 | 接 One-KVM（192.168.1.155） |
+| 主板 | AMI Aptio BIOS，Board ID `S210H Series`，BIOS 日期 2020-11-19 |
+| 核显 | Intel UHD 630，已开启 GVT-g 切分给虚拟机（见 [../pve/cluster.md](../pve/cluster.md)） |
+
+> ⚠️ **热重启后认不到 NVMe 硬盘**：`reboot` 之后 BIOS 显示 "No NVME Device Found"，停在 BIOS 设置界面。
+> 2026-11-01 出现了两次，两次都是**长按电源键关机、拔电再开机**后恢复。
+> **在修好之前，pve3 要重启时一律"关机 → 断电 → 开机"，不要直接 reboot。** 待查：刷新 BIOS，或调整 BIOS 里的 NVMe / PCIe 相关设置。
 
 **更换记录**
 - 2026-11-01 之前：pve3 是一台 GMKtec M5。主板损坏（通电风扇转，不 POST、HDMI 无输出，拔内存/硬盘测试均无效）。

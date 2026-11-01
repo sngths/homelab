@@ -55,6 +55,23 @@ enterprise 和 ceph 源已注释掉。注意：pve3 的 pve 源在 `sources.list
 
 PVE 防火墙在三台上都没启用。
 
+## pve3 核显切分（Intel GVT-g，2026-11-01）
+
+pve3 的 Intel UHD 630 支持 GVT-g，可以切成虚拟显卡分给虚拟机，主机自己的显示输出不受影响。
+AMD 消费级核显（pve2 的 780M、pve4 的 Vega）不支持切分，只能整块直通，还有 reset bug，所以不用。
+
+- GRUB 参数：`intel_iommu=on iommu=pt i915.enable_gvt=1`（原文件备份 `/etc/default/grub.bak-gvt`）
+- 模块：`/etc/modules-load.d/gvt.conf`（vfio、vfio_iommu_type1、vfio_pci、kvmgt）
+- 可用类型（`/sys/bus/pci/devices/0000:00:02.0/mdev_supported_types/`）：
+
+  | 类型 | 显存 | 最高分辨率 | 可用数量 |
+  |---|---|---|---|
+  | `i915-GVTg_V5_4` | 128M + 512M | 1920×1200 | 1 |
+  | `i915-GVTg_V5_8` | 64M + 384M | 1024×768 | 2 |
+
+  两种类型共用同一份显存，开 1 个 V5_4 后 V5_8 的数量会减少。想多开，可以在 BIOS 里调大核显显存（Aperture Size）。
+- 虚拟机里配置：`hostpci0: 0000:00:02.0,mdev=i915-GVTg_V5_4`。Windows 需要装支持 GVT-g 的旧版 Intel 显卡驱动，新版驱动不支持。
+
 ## 已清理
 
 - 2026-11-01：删除了已退役节点 pve1 的残留 `/etc/pve/nodes/pve1`，其中有一个找不回来的容器 CT 121 `jellyfin-ct` 的配置。
