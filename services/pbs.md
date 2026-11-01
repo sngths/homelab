@@ -11,7 +11,7 @@
 | 配置 | 2 核 / 4G / 32G 系统盘（local-lvm） |
 | 数据盘 | `scsi1`：2T qcow2，放在 NAS 上（PVE 存储 `nas-pbs` = 192.168.1.40:/volume1/pbs），`backup=0`（备份 PBS 自己时不包含这块盘） |
 | IP | 192.168.1.51 |
-| 网页 | https://192.168.1.51:8007，账号 `root@pam`（**密码不在这里**） |
+| 网页 | https://192.168.1.51:8007，账号 `root@pam`（密码见 [../credentials.md](../credentials.md)） |
 | SSH | 用户 `debian`（cloud-init 放了临时密钥），有 sudo |
 | 软件源 | 中科大：debian（`/etc/apt/mirrors/*.list`）、pbs-no-subscription（`/etc/apt/sources.list.d/pbs.sources`），enterprise 源已禁用 |
 

@@ -12,7 +12,7 @@
 | 热插拔 | CPU、内存、硬盘、网卡都可以在线调整（2026-11-01 开启），见下方"调整配置" |
 | CPU 类型 | `x86-64-v3`，可以在 Intel（pve3）和 AMD（pve2 / pve4）节点之间迁移 |
 | IP | 192.168.1.50/24，网关 192.168.1.1，DNS 192.168.1.1 和 223.5.5.5 |
-| 登录 | 用户 `ubuntu`，SSH 密钥 + 控制台密码（**密码不在这里**），有 sudo |
+| 登录 | 用户 `ubuntu`，SSH 密钥 + 控制台密码（见 [../credentials.md](../credentials.md)），有 sudo |
 | 其他 | 已装 qemu-guest-agent，时区 Asia/Shanghai |
 
 创建命令（以后再建同类虚拟机可以照着做）：

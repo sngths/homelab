@@ -1,4 +1,4 @@
-# 机密信息一律不入库
+# 账号密码记在 credentials.md（仓库私有）；私钥、证书、镜像包不入库
 *.key
 *.pem
 secrets/
