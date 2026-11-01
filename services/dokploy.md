@@ -9,6 +9,7 @@
 | VMID / 名称 | 200 / dokploy，在 pve3 上，开机自启 |
 | 系统 | Ubuntu 24.04 LTS（cloud image + cloud-init） |
 | 配置 | 8 核 / 16G / 200G（local-lvm，开了 discard 和 iothread） |
+| 热插拔 | CPU、内存、硬盘、网卡都可以在线调整（2026-11-01 开启），见下方"调整配置" |
 | CPU 类型 | `x86-64-v3`，可以在 Intel（pve3）和 AMD（pve2 / pve4）节点之间迁移 |
 | IP | 192.168.1.50/24，网关 192.168.1.1，DNS 192.168.1.1 和 223.5.5.5 |
 | 登录 | 用户 `ubuntu`，SSH 密钥 + 控制台密码（**密码不在这里**），有 sudo |
@@ -30,6 +31,22 @@ qm start 200
 ```
 
 `/root/noble.img` 留在 pve3 上了，可以重复使用。
+
+## 调整配置
+
+已开启热插拔：`numa: 1`，`hotplug: disk,network,usb,cpu,memory`，`cores: 16`，`vcpus: 8`。
+
+| 要做什么 | 命令（在 pve3 上） | 要不要重启 |
+|---|---|---|
+| 加 / 减 CPU | `qm set 200 --vcpus 12`（最多 16，即 `cores` 的值） | 不用 |
+| 加内存 | `qm set 200 --memory 24576` | 不用（减内存不一定成功，建议只加不减） |
+| 扩硬盘 | `qm resize 200 scsi0 +100G`，然后在虚拟机里 `sudo growpart /dev/sda 1 && sudo resize2fs /dev/sda1` | 不用（**只能扩大，不能缩小**） |
+| CPU 超过 16 | 先改 `--cores`，需要重启 | 要 |
+
+虚拟机里加了 udev 规则 `/etc/udev/rules.d/80-hotplug-cpu-mem.rules`，新插入的 CPU 和内存会自动上线。
+2026-11-01 实测：vcpus 8 → 10 → 8，虚拟机里立即生效。
+
+上限是 pve3 本身：16 线程、约 62G 内存、本地盘约 900G 空闲。
 
 ## 系统里的配置
 
