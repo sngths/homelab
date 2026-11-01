@@ -48,10 +48,47 @@ python3 -c "from PIL import Image; Image.open('/tmp/202.ppm').save('/tmp/202.jpg
 
 注意：screendump 截的是虚拟机的标准显示输出（`vga: std`）。以后加了 GVT-g 虚拟显卡，要确认截屏还能拿到正确的画面。
 
+## 已安装 / 已配置（2026-11-01）
+
+| 项目 | 说明 |
+|---|---|
+| GVT-g 虚拟显卡 | `hostpci0: 0000:00:02.0,mdev=i915-GVTg_V5_4`，Windows 显示为 Intel UHD Graphics 630，驱动 31.0.101.2140（Windows 更新自动装的） |
+| OpenSSH 服务端 | Win32-OpenSSH 10.4（MSI），默认 shell 是 PowerShell，公钥在 `C:\ProgramData\ssh\administrators_authorized_keys`。**仅用于管理**，以后可以停掉 |
+| Bambu Studio | 02.08.02.61，静默安装（`/S`）。向导：区域中国内地、不加入体验计划、只选 A1、默认耗材、装了网络插件、防火墙已放行 |
+| 默认输入法 | 英文键盘（`HKCU\Control Panel\International\User Profile\InputMethodOverride = 0409:00000409`）。中文拼音保留，需要时切换 |
+
+### 显卡的现状
+
+桌面目前由标准虚拟显示（`vga: std`，Windows 里是 Microsoft Basic Display Adapter）输出，Intel 虚拟显卡没有接显示器。
+所以 Bambu Studio 自动用了它自带的软件渲染 `C:\Program Files\Bambu Studio\mesa\opengl32.dll`（CPU 渲染），
+3D 视图显示正常，8 核下够用。
+
+想让 Intel 显卡真正参与渲染，要让桌面改由 Intel 虚拟显卡输出（GVT-g 的 display / dmabuf，或者去掉 std VGA），
+但那样 `screendump` 就截不到画面了，要换截屏方式。目前启动时 QEMU 还提示 `VFIO dma-buf not supported in kernel`。暂不处理。
+
+## 外部控制工具 vminput
+
+[`scripts/vminput.py`](../scripts/vminput.py)，装在 pve3 的 `/usr/local/bin/vminput`。通过 QMP（`/var/run/qemu-server/<vmid>.qmp`）发送
+`input-send-event`，Windows 收到的是虚拟 USB 键盘 / 平板的真实输入事件。
+
+```bash
+vminput 202 key meta_l                  # 按键 / 组合键（qcode，用 - 连接，如 ctrl-shift-ret）
+vminput 202 type "bambu studio"         # 逐字输入（仅 ASCII），字符间隔随机
+vminput 202 click 644 532               # 沿随机贝塞尔曲线移动后单击（坐标按 1280x800）
+vminput 202 click 36 250 left 2         # 双击
+vminput 202 scroll 3                    # 滚轮
+```
+
+注意：
+- 中文输入法在"中"状态下，输入的字母会变成拼音候选，所以默认输入法设成了英文键盘。
+- 在 PowerShell 窗口里单击会进入"选择"模式（标题出现"选择"），按 Esc 退出。
+- Bambu Studio 选打印机那一页，要点卡片右上角的勾选框，点图片没用。
+
 ## 待办
 
-- [ ] 挂上 GVT-g 虚拟显卡（`hostpci0: 0000:00:02.0,mdev=i915-GVTg_V5_4`），装支持 GVT-g 的 Intel 显卡驱动
-- [ ] 安装微信、Bambu Studio
+- [ ] 用户提供：A1 打印机的 IP 和局域网访问码，或者登录 Bambu 账号
 - [ ] 通过 Windows 更新升级到 25H2，打补丁
-- [ ] 外部控制工具：截屏 + 鼠标（带轨迹）+ 键盘，接上 AI 视觉识别
-- [ ] 卸载安装光盘（ide0、ide2）
+- [ ] Windows 激活（用户自己处理）
+- [ ] 外部控制工具接上 AI 视觉识别（截屏 → 找按钮 → 点击）
+- [ ] 中文文字输入（微信等需要）：考虑剪贴板粘贴，或外部切换输入法后输入拼音
+- [ ] 以后再装：微信（扫码登录需要用户配合）
