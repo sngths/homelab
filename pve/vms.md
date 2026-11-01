@@ -33,7 +33,7 @@
 | 125 | LXC | pve2 | llm-server | 8 | 16G | 300G | 非特权容器 |
 | 126 | VM | pve2 | FabStation | 4 | 4G | 500G | |
 | 127 | VM | pve4 | ubuntu-desktop | 8 | 32G | 300G | |
-| 128 | VM | pve2 | Dokploy | 1 | 32G | 800G | **旧的 Dokploy**，是否还需要待确认 |
+| 128 | VM | pve2 | Dokploy | 1 | 32G | 800G | 旧的 Dokploy，用户确认不需要处理（2026-11-01） |
 | 129 | VM | pve2 | mcp-server | 8 | 16G | 300G | |
 | **200** | VM | pve3 | **dokploy** | 8 | 16G | 200G | **新的部署平台，开机自启**，见 [../services/dokploy.md](../services/dokploy.md) |
 

@@ -66,4 +66,3 @@ qm start 200
 
 - [ ] 配每日备份（PBS）
 - [ ] 改 ubuntu 用户的控制台密码
-- [ ] 确认旧的 VM 128 "Dokploy"（pve2）还要不要

@@ -42,7 +42,6 @@
 - [ ] 修改密码：PVE root（三台相同）、One-KVM（仍是出厂默认密码）、dokploy VM 的 ubuntu 用户
 - [ ] 部署 PBS（Proxmox Backup Server），给常用虚拟机配每日增量备份
 - [ ] 清理不用的旧虚拟机（k8s 那一组、多个 win11 等）
-- [ ] 确认 pve2 上旧的 VM 128 "Dokploy" 是否还需要（新平台是 pve3 上的 VM 200）
 - [ ] pve3 安装 `intel-microcode`
 - [ ] pve4 若再死机：查 pve3 上的 `/var/log/netconsole-remote.log`，考虑跑 memtest
 - [ ] pve4 硬盘空闲 57°C 左右，考虑加散热片
