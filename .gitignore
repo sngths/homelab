@@ -1,0 +1,6 @@
+# 机密信息一律不入库
+*.key
+*.pem
+secrets/
+.env
+*.tar
