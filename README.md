@@ -22,6 +22,7 @@
 | 192.168.1.4 | pve4 | PVE 节点，GMKtec NucBox M5 |
 | 192.168.1.40 | nas | 群晖 NAS，NFS 共享给 PVE 存备份 |
 | 192.168.1.50 | dokploy（VM 200） | Docker 部署平台，Dokploy 面板 :3000 |
+| 192.168.1.51 | pbs（VM 201） | Proxmox Backup Server，网页 :8007 |
 | 192.168.1.117 | DESKTOP-0GE8DG9 | 家里的 Windows 台式机，装了 wsd，是远程操作家里网络的入口 |
 | 192.168.1.155 | One-KVM | 网络 KVM（onecloud 刷机），目前接在 pve3 上 |
 
@@ -34,13 +35,15 @@
 | [pve/vms.md](pve/vms.md) | 虚拟机清单 |
 | [pve/upgrade-8-to-9.md](pve/upgrade-8-to-9.md) | 2026-11-01 PVE 8 → 9 升级记录和踩过的坑 |
 | [services/dokploy.md](services/dokploy.md) | Docker 部署平台 |
+| [services/pbs.md](services/pbs.md) | PBS 备份服务器、备份策略 |
 | [runbooks/](runbooks/) | 远程访问方式、故障处理手册 |
 | [scripts/](scripts/) | 可复用的脚本 |
 
 ## 待办
 
-- [ ] 修改密码：PVE root（三台相同）、One-KVM（仍是出厂默认密码）、dokploy VM 的 ubuntu 用户
-- [ ] 部署 PBS（Proxmox Backup Server），给常用虚拟机配每日增量备份
+- [ ] 修改密码：PVE root（三台相同）、One-KVM（仍是出厂默认密码）、dokploy VM 的 ubuntu 用户、PBS 的 root 和 debian 用户
+- [x] 部署 PBS，VM 200 每日增量备份（2026-11-01）
+- [ ] 常用的虚拟机陆续加进 `daily-pbs` 备份任务
 - [ ] 清理不用的旧虚拟机（k8s 那一组、多个 win11 等）
 - [ ] pve3 安装 `intel-microcode`
 - [ ] pve4 若再死机：查 pve3 上的 `/var/log/netconsole-remote.log`，考虑跑 memtest

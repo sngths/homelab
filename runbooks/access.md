@@ -22,7 +22,7 @@ wsd get --force DESKTOP-0GE8DG9:<路径> <本地路径>
 
 - 临时密钥：Windows 上的 `C:\Users\tianxing\.ssh\pve_claude`，注释是 `claude-pve-upgrade`
 - 公钥加在 `/etc/pve/priv/authorized_keys`。这个文件在集群内共享，三台节点同时生效
-- 这把公钥也通过 cloud-init 放进了 VM 200 的 `ubuntu` 用户
+- 这把公钥也通过 cloud-init 放进了 VM 200 的 `ubuntu` 用户和 VM 201 的 `debian` 用户
 - 撤销：
   ```bash
   sed -i '/claude-pve-upgrade/d' /etc/pve/priv/authorized_keys   # 任意一台 PVE 节点上执行

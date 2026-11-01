@@ -35,7 +35,8 @@
 | 127 | VM | pve4 | ubuntu-desktop | 8 | 32G | 300G | |
 | 128 | VM | pve2 | Dokploy | 1 | 32G | 800G | 旧的 Dokploy，用户确认不需要处理（2026-11-01） |
 | 129 | VM | pve2 | mcp-server | 8 | 16G | 300G | |
-| **200** | VM | pve3 | **dokploy** | 8 | 16G | 200G | **新的部署平台，开机自启**，见 [../services/dokploy.md](../services/dokploy.md) |
+| **200** | VM | pve3 | **dokploy** | 8 | 16G | 200G | **新的部署平台，开机自启，每日备份**，见 [../services/dokploy.md](../services/dokploy.md) |
+| **201** | VM | pve3 | **pbs** | 2 | 4G | 32G + 2T（NAS） | **备份服务器，开机自启**，见 [../services/pbs.md](../services/pbs.md) |
 
 ## 各节点分配情况（配置值合计）
 

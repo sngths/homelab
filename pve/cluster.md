@@ -25,7 +25,9 @@ enterprise 和 ceph 源已注释掉。注意：pve3 的 pve 源在 `sources.list
 |---|---|---|---|
 | local | 目录 | `/var/lib/vz`（约 94G） | ISO、模板、备份 |
 | local-lvm | LVM-thin | 每台本地 NVMe | 虚拟机磁盘（各节点独立，**不共享**） |
-| nas | NFS | 192.168.1.40:/volume1/pve | 备份 |
+| nas | NFS | 192.168.1.40:/volume1/pve | vzdump 完整备份（旧） |
+| nas-pbs | NFS | 192.168.1.40:/volume1/pbs | 只放 PBS 的 2T 数据盘 |
+| pbs | PBS | 192.168.1.51，datastore `nas` | 每日增量备份 |
 
 虚拟机磁盘都在各自节点的本地盘上，所以目前**没有 HA**：一台主机挂了，上面的虚拟机只能从备份恢复到别的节点。
 
@@ -34,7 +36,7 @@ enterprise 和 ceph 源已注释掉。注意：pve3 的 pve 源在 `sources.list
 - 原来的每月备份任务 `backup-00133daf-2ec8`（每月 1 号 0 点，备份到 nas）**已于 2026-11-01 停用**，
   因为它和 pve4 死机有关（见 [../runbooks/pve4-freeze.md](../runbooks/pve4-freeze.md)）。
 - 2026-11-01 升级前做过一次全量备份；清理后 NAS 上每台虚拟机只保留最新一份（共 29 份，约 928G）。
-- 计划：部署 PBS（Proxmox Backup Server），用增量去重备份替代。
+- **2026-11-01 起：每日增量备份到 PBS**（任务 `daily-pbs`，03:00，目前只有 VM 200），详见 [../services/pbs.md](../services/pbs.md)。
 - 手动备份 / 删除备份的注意事项：
   - 非特权 LXC 备份到 NFS 要加 `tmpdir=/var/tmp`，否则会失败。
   - 通过 API 批量删除 NAS 上的备份时要**一个一个删**，并发删除会出现 `cfs-lock 'storage-nas' ... timeout`。
