@@ -1,28 +1,36 @@
 #!/usr/bin/env python3
-"""aw —— 从本机操作自动化 Windows 虚拟机（VM 202）。
+"""aw —— 操作自动化 Windows 虚拟机（VM 202）。
+
+两种运行位置（自动判断）：
+  - 在跳板机 home-jump 上：直接本地执行（推荐，任何装了 wsd 的电脑都能用）：
+      wsd exec home-jump -- aw shot - | base64 -d > /tmp/s.jpg          # 截图一条命令取回
+      wsd exec home-jump -- aw do "click 640 272" --shot - | base64 -d > /tmp/s.jpg
+      wsd exec home-jump -- aw put 你的机器名:路径/model.stl              # 跳板机从你的机器拉文件再放进虚拟机
+  - 在其他机器上（如 tianxing-claude）：经 wsd 转发到跳板机执行。
 
 链路：本机 → wsd exec 到跳板机 home-jump（CT 203，Linux）→ ssh 到 pve3（键鼠、截屏）或 VM 202（管理命令、传文件）。
 跳板机不通时设 AW_VIA=win，改走备用通道 Windows 台式机 DESKTOP-0GE8DG9。
 键鼠和截屏都在虚拟机外部（QMP）完成，Windows 里没有自动化进程。
 
 用法：
-  aw.py shot [out.jpg] [--crop X Y W H [ZOOM]]     截屏（默认 /tmp/aw.jpg），可裁剪放大看小字
+  aw.py shot [out.jpg|-] [--crop X Y W H [ZOOM]]   截屏（默认 /tmp/aw.jpg；"-" 表示把 JPEG 的 base64 打到标准输出）
   aw.py do "click 640 272" "wait 1" "type abc" "key ret" ... [--shot out.jpg] [--wait N]
                                                    执行一串动作，结束后等 N 秒（默认 1.5）再截屏
                                                    --noshot 不截屏
   aw.py text "中文或任意文本"                         通过剪贴板粘贴（Ctrl+V）到当前输入框
-  aw.py put 本地文件 [虚拟机目录]                     复制文件进虚拟机（默认 C:\\Users\\auto\\Desktop\\in）
+  aw.py put 文件 [虚拟机目录]                         复制文件进虚拟机（默认 C:\\Users\\auto\\Desktop\\in）
+                                                   在跳板机上运行时，文件可写成"机器名:路径"，自动用 wsd get 拉取
   aw.py ps "PowerShell 命令"                         在虚拟机里执行管理命令（auto 账号，经 OpenSSH）
 
 动作（do 里每一项）：
   click X Y [left|right|middle] [次数]   move X Y   type ASCII文本   key ctrl-a   scroll N   wait 秒
 坐标按 1280x800 屏幕。
 """
-import base64, os, re, subprocess, sys, shlex, shutil, time
+import base64, os, re, socket, subprocess, sys, shlex, shutil, tempfile, time
 
 JUMP = 'home-jump'         # 主通道：跳板机（jump 用户，密钥 jump@homelab）
 WIN = 'DESKTOP-0GE8DG9'   # 备用通道：Windows 台式机（密钥 pve_claude）
-VIA = os.environ.get('AW_VIA', 'jump')
+VIA = os.environ.get('AW_VIA') or ('local' if socket.gethostname() == JUMP else 'jump')
 SELF = 'tianxing-claude'  # 本机在 wsd 里的名字（中转机从这里取文件）
 PVE = '192.168.1.3'       # VM 202 所在节点 pve3
 VM_IP = '192.168.1.52'
@@ -42,7 +50,10 @@ def wsd(cmd, timeout=120, machine=WIN):
 
 
 def jump(script, timeout=120):
-    """在跳板机上用 bash 执行脚本"""
+    """在跳板机上用 bash 执行脚本（本身就在跳板机上时直接执行）"""
+    if VIA == 'local':
+        r = subprocess.run(['bash', '-c', script], capture_output=True, text=True, timeout=timeout + 30)
+        return r.stdout + r.stderr
     b = base64.b64encode(script.encode()).decode()   # wsd 会把参数拼成一行交给 shell，用 base64 避开引号问题
     return wsd('echo %s | base64 -d | bash' % b, timeout, JUMP)
 
@@ -79,7 +90,10 @@ def save_shot(out, text):
     m = re.search(r'===SHOT===([A-Za-z0-9+/=\s]+?)===END===', text)
     if not m:
         sys.exit('截屏失败：\n' + text[-2000:])
-    open(out, 'wb').write(base64.b64decode(re.sub(r'\s', '', m.group(1))))
+    b = re.sub(r'\s', '', m.group(1))
+    if out == '-':                      # 只输出 base64，方便远端 | base64 -d > x.jpg
+        sys.stdout.write(b + '\n'); return
+    open(out, 'wb').write(base64.b64decode(b))
     print('截屏已保存', out)
 
 
@@ -123,7 +137,22 @@ def main():
         print(vminput(['key', 'ctrl-v']))
     elif cmd == 'put':
         src = a[0]; dst = a[1] if len(a) > 1 else r'C:\Users\auto\Desktop\in'
-        name = os.path.basename(src)
+        name = os.path.basename(src.split(':', 1)[-1])
+        if VIA == 'local':
+            t = tempfile.mkdtemp()
+            f = os.path.join(t, name)
+            if os.path.exists(src):
+                shutil.copy(src, f)
+            else:                         # "机器名:路径"，从那台机器拉过来
+                subprocess.run([os.path.expanduser('~/.local/bin/wsd'), 'get', '--force', src, f],
+                               capture_output=True, text=True, timeout=600)
+            if not os.path.exists(f):
+                shutil.rmtree(t); sys.exit('取文件失败：' + src)
+            d = dst.replace('\\', '/')
+            print(jump('%sauto@%s %s && scp -q -o BatchMode=yes %s %s; echo "[exit=$?]"'
+                       % (SSH, VM_IP, shlex.quote('powershell -NoProfile -Command New-Item -ItemType Directory -Force "%s" | Out-Null' % dst),
+                          shlex.quote(f), shlex.quote('auto@%s:%s/%s' % (VM_IP, d, name))), 600))
+            shutil.rmtree(t); return
         os.makedirs(XFER, exist_ok=True); shutil.copy(src, os.path.join(XFER, name))
         if VIA != 'win':
             d = dst.replace('\\', '/')

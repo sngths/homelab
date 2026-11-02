@@ -29,6 +29,11 @@ aw ps "Get-Process bambu*"                       # 虚拟机里执行 PowerShell
 
 动作：`click X Y [left|right] [次数]`、`move X Y`、`type 文本`、`key 组合键`（qcode，如 `ret` `esc` `ctrl-v` `alt-f4` `meta_l`）、`scroll N`（正数向下）、`wait 秒`。
 
+## 在其他电脑上用
+
+`aw` 也装在跳板机上（`/home/jump/.local/bin/aw`），任何装了 wsd 的电脑都能用，说明在 `wsd cat home-jump:README-auto-win.md`。
+例：`wsd exec home-jump -- 'aw shot -' | base64 -d > /tmp/aw.jpg`（整条 aw 命令放在单引号里）。
+
 ## 工作循环
 
 1. `aw shot` → Read 看图 → 判断坐标；拿不准就 `--crop` 放大再看。
@@ -40,6 +45,7 @@ aw ps "Get-Process bambu*"                       # 虚拟机里执行 PowerShell
 - **发送打印前必须先问用户确认**（耗材、时间、打印机上有没有东西）。只切片可以直接做。
 - 关机、重启虚拟机，删除文件，先征得用户同意。
 - **同一时间只能有一个会话操作这台机器**，开始前先截屏，看到有别人正在操作的迹象就停下来问用户。
+- **测试工具时不要往当前窗口里乱输入字符**（Bambu Studio 里很多字母是快捷键），用移动鼠标、截屏这类无副作用的操作测试。
 - 不要在 Windows 里装自动化软件（按键精灵、pyautogui 等），键鼠一律走 `aw`（从虚拟机外部发送）。
 - 改了虚拟机配置要更新 `~/projects/homelab/services/auto-win.md` 并提交推送。
 

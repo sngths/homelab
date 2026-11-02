@@ -86,6 +86,17 @@ vminput 202 scroll 3                    # 滚轮
 
 ## 本机一体化工具 aw（推荐）
 
+**任何电脑都能用（2026-11-02）**：`aw` 也装在跳板机 `home-jump:/home/jump/.local/bin/aw`，在跳板机上自动本地执行。
+使用说明放在跳板机 `~/README-auto-win.md`（仓库备份 `claude-skills/auto-win/README-on-home-jump.md`）：
+
+```bash
+wsd exec home-jump -- 'aw shot -' | base64 -d > /tmp/aw.jpg                  # 截图一条命令取回
+wsd exec home-jump -- 'aw do "click 115 48" --shot -' | base64 -d > /tmp/aw.jpg
+wsd exec home-jump -- 'aw put 机器名:路径/model.stl'                          # 跳板机用 wsd get 拉文件再放进虚拟机
+```
+
+wsd exec 会把参数拼成一行交给 shell，所以整条 aw 命令要放在单引号里。改了 `scripts/aw.py` 后要同步到跳板机。
+
 本机已链接到 `~/.local/bin/aw`，任意目录可用。默认经跳板机 home-jump，`AW_VIA=win` 改走 Windows 台式机。其他 Claude 会话通过全局技能 `auto-win`（`~/.claude/skills/auto-win/SKILL.md`，仓库备份在 `claude-skills/auto-win/`）获得用法说明。
 
 [`scripts/aw.py`](../scripts/aw.py)，在本机运行，一次往返完成"动作 → 等待 → 截屏"，截屏约 1 秒。
