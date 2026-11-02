@@ -87,4 +87,7 @@ AMD 消费级核显（pve2 的 780M、pve4 的 Vega）不支持切分，只能�
 - 2026-11-02：清理 NAS 备份目录里网页上看不到的残留（用户确认，按明确文件名删除）：
   6 份中断的半截备份（VM 106、112 的 `.vma.dat` 和 `.tmp` 目录，约 272G，见 pve4 死机文档）、
   58 个失败备份留下的孤立日志（VM 101/107/108/111/123/126、CT 125）。清理后 NAS 剩余约 7.2T。
+- 2026-11-02：删除 112 idea（pve4）、125 llm-server（LXC）、128 旧 Dokploy（部署过 zczyllmplatform 的 5 个服务和两个 MySQL，
+  最后使用 2025-09-15）、129 mcp-server（Windows 11，系统盘有 BitLocker，无法离线查看）及它们的 NAS 备份，用户确认直接删除。
+  之后 NAS 备份剩 14 份共 485G，NAS 剩余约 7.3T；pve4 上只剩 127 ubuntu-desktop。
   注意：判断"孤立日志"时要用 `shopt -s nullglob` 收集匹配，`ls a* b*` 只要一个没匹配就返回失败，会误判。

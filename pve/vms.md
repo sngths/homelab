@@ -11,7 +11,6 @@
 | 102 | VM | pve2 | debian | 4 | 16G | 16G | |
 | 104 | VM | pve2 | debian-test | 4 | 2G | 50G | |
 | 109 | VM | pve2 | jellyfin | 8 | 8G | 100G | |
-| 112 | VM | pve4 | idea | 8 | 16G | 200G | NAS 上最新备份是 2026-10-01 |
 | 114 | VM | pve2 | ubuntu | 8 | 16G | 250G | |
 | 115 | VM | pve2 | win11-download | 8 | 8G | 150G | |
 | 116 | VM | pve2 | win11 | 4 | 8G | 150G | |
@@ -19,11 +18,8 @@
 | 120 | VM | pve2 | win11-RL | 8 | 8G | 150G | |
 | 122 | VM | pve2 | debian-desktop | 8 | 32G | 300G | |
 | 124 | VM | pve3 | win11-code | 8 | 32G | 200G | |
-| 125 | LXC | pve2 | llm-server | 8 | 16G | 300G | 非特权容器 |
 | 126 | VM | pve2 | FabStation | 4 | 4G | 500G | |
 | 127 | VM | pve4 | ubuntu-desktop | 8 | 32G | 300G | |
-| 128 | VM | pve2 | Dokploy | 1 | 32G | 800G | 旧的 Dokploy，用户确认不需要处理（2026-11-01） |
-| 129 | VM | pve2 | mcp-server | 8 | 16G | 300G | |
 | **200** | VM | pve3 | **dokploy** | 8 | 16G | 200G | **新的部署平台，开机自启，每日备份**，见 [../services/dokploy.md](../services/dokploy.md) |
 | **202** | VM | pve3 | **auto-win** | 8 | 16G | 150G | **Windows 11 自动化操作机，开机自启**，见 [../services/auto-win.md](../services/auto-win.md) |
 | **203** | LXC | pve2 | **home-jump** | 1 | 512M | 4G | **跳板机（Debian 12），开机自启（order=1）**，见 [../services/home-jump.md](../services/home-jump.md) |
