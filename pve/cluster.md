@@ -83,4 +83,8 @@ AMD 消费级核显（pve2 的 780M、pve4 的 Vega）不支持切分，只能�
   - k8s：103 k8s-load-balancer、105 k8s-master01、106 k8s-worker03、107 k8s-worker01、108 k8s-worker02
   - 配套：110 harbor、111 jenkins、113 prometheus、117 gitlab（只有 1 个仓库 tianxing/proto，已在 GitHub）、
     123 minio（只有公开模型 mistral-7b-instruct-v0.2.Q4_K_M.gguf 和两个小脚本）
-  - 释放本地盘约 923G，NAS 约 358G。删除后 NAS 备份剩 18 份共 566G，NAS 剩余约 7.0T。
+  - 释放本地盘约 923G，NAS 约 358G。删除后 NAS 备份剩 18 份共 566G。
+- 2026-11-02：清理 NAS 备份目录里网页上看不到的残留（用户确认，按明确文件名删除）：
+  6 份中断的半截备份（VM 106、112 的 `.vma.dat` 和 `.tmp` 目录，约 272G，见 pve4 死机文档）、
+  58 个失败备份留下的孤立日志（VM 101/107/108/111/123/126、CT 125）。清理后 NAS 剩余约 7.2T。
+  注意：判断"孤立日志"时要用 `shopt -s nullglob` 收集匹配，`ls a* b*` 只要一个没匹配就返回失败，会误判。
