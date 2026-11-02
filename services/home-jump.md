@@ -18,5 +18,7 @@
 
 - [x] 创建容器、装基础包、建 `jump` 用户、生成密钥（2026-11-02）
 - [x] `jump@homelab` 公钥已授权（2026-11-02，用户同意）：PVE 三台 root（`/etc/pve/priv/authorized_keys`）、VM 200 ubuntu、VM 201 debian、VM 202 auto（`C:\ProgramData\ssh\administrators_authorized_keys`）。已从跳板机实测全部能免密登录，pve3 上 `vminput` 也能调用
-- [ ] 用官方接入命令安装 wsd，用户扫码认领，开启"执行命令"
-- [ ] `aw` 等工具改为走 jump，Windows 台式机降为备用
+- [x] 用官方接入命令安装 wsd（`jump` 用户，`~/.local/bin/workspaced`，cron @reboot 自启），接入时带 token 自动认领；用户开启了"执行命令"和文件读写（2026-11-02）
+- [x] `aw` 默认走 home-jump；`AW_VIA=win` 走备用的 Windows 台式机（2026-11-02 两条通道都实测通过）
+
+状态里"系统尚未提供 TUN 设备"的提示可以忽略，那是虚拟组网功能，不影响远程执行。

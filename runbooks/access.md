@@ -1,8 +1,23 @@
 # 远程访问家里设备的方式
 
-## 入口：Windows 台式机 + wsd
+## 主入口：跳板机 home-jump（2026-11-02 起）
 
-外面的机器通过 wsd 连到家里的 Windows 台式机 `DESKTOP-0GE8DG9`（192.168.1.117），再从它访问家里网络：
+外面的机器通过 wsd 连到跳板机 `home-jump`（CT 203，pve2，192.168.1.53，Linux），再从它 SSH 到家里各设备。
+详见 [../services/home-jump.md](../services/home-jump.md)。
+
+```bash
+# wsd 会把命令拼成一行交给 shell，复杂命令先 base64 编码
+wsd exec home-jump --timeout 60 -- "echo <base64> | base64 -d | bash"
+wsd exec home-jump -- "ssh root@192.168.1.3 'qm list'"
+```
+
+- 跑在 `jump` 用户下，密钥 `jump@homelab` 已授权到：PVE 三台 root、VM 200 ubuntu、VM 201 debian、VM 202 auto。
+- 文件权限是读写：跳板机上 `~/.local/bin/wsd get tianxing-claude:<路径>` 能从本机取文件。
+- 撤销：PVE 上 `sed -i '/jump@homelab/d' /etc/pve/priv/authorized_keys`，各虚拟机删掉对应行；IM App 里移除 home-jump。
+
+## 备用入口：Windows 台式机 + wsd
+
+跳板机或 pve2 出问题时，通过 wsd 连到家里的 Windows 台式机 `DESKTOP-0GE8DG9`（192.168.1.117），再从它访问家里网络：
 
 ```bash
 wsd exec DESKTOP-0GE8DG9 --timeout 60 -- "<PowerShell 命令>"

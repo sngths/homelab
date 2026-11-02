@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """aw —— 从本机操作自动化 Windows 虚拟机（VM 202）。
 
-链路：本机 → wsd exec 到台式机 DESKTOP-0GE8DG9 → ssh 到 pve3（键鼠、截屏）或 VM 202（管理命令、传文件）。
+链路：本机 → wsd exec 到跳板机 home-jump（CT 203，Linux）→ ssh 到 pve3（键鼠、截屏）或 VM 202（管理命令、传文件）。
+跳板机不通时设 AW_VIA=win，改走备用通道 Windows 台式机 DESKTOP-0GE8DG9。
 键鼠和截屏都在虚拟机外部（QMP）完成，Windows 里没有自动化进程。
 
 用法：
@@ -19,8 +20,10 @@
 """
 import base64, os, re, subprocess, sys, shlex, shutil, time
 
-WIN = 'DESKTOP-0GE8DG9'   # 中转的 Windows 台式机（装了 wsd 和 ssh 密钥）
-SELF = 'tianxing-claude'  # 本机在 wsd 里的名字（台式机从这里取文件）
+JUMP = 'home-jump'         # 主通道：跳板机（jump 用户，密钥 jump@homelab）
+WIN = 'DESKTOP-0GE8DG9'   # 备用通道：Windows 台式机（密钥 pve_claude）
+VIA = os.environ.get('AW_VIA', 'jump')
+SELF = 'tianxing-claude'  # 本机在 wsd 里的名字（中转机从这里取文件）
 PVE = '192.168.1.3'       # VM 202 所在节点 pve3
 VM_IP = '192.168.1.52'
 VMID = '202'
@@ -28,16 +31,29 @@ XFER = os.path.expanduser('~/imgxfer')
 NOISE = re.compile(r'NativeCommandError|RemoteException|所在位置|^\+ |^\s*\+ ~|CategoryInfo|FullyQualifiedErrorId|Permanently added')
 
 
-def wsd(ps, timeout=120):
+def wsd(cmd, timeout=120, machine=WIN):
+    """在中转机上执行：Windows 上 cmd 是 PowerShell 字符串；跳板机上 cmd 是参数列表"""
     env = dict(os.environ)
     env['no_proxy'] = env.get('no_proxy', '') + ',msg-gw.zczy.ai'
-    r = subprocess.run(['wsd', 'exec', WIN, '--timeout', str(timeout), '--', ps],
+    argv = cmd if isinstance(cmd, list) else [cmd]
+    r = subprocess.run(['wsd', 'exec', machine, '--timeout', str(timeout), '--'] + argv,
                        capture_output=True, text=True, env=env, timeout=timeout + 30)
     return '\n'.join(l for l in (r.stdout + r.stderr).splitlines() if not NOISE.search(l))
 
 
+def jump(script, timeout=120):
+    """在跳板机上用 bash 执行脚本"""
+    b = base64.b64encode(script.encode()).decode()   # wsd 会把参数拼成一行交给 shell，用 base64 避开引号问题
+    return wsd('echo %s | base64 -d | bash' % b, timeout, JUMP)
+
+
+SSH = 'ssh -o BatchMode=yes -o StrictHostKeyChecking=accept-new -o ConnectTimeout=10 '
+
+
 def ssh_ps(target, remote_cmd, timeout):
-    """在台式机上 ssh 到 target 执行 remote_cmd（已转义好的字符串）"""
+    """在中转机上 ssh 到 target 执行 remote_cmd"""
+    if VIA != 'win':
+        return jump(SSH + target + ' ' + shlex.quote(remote_cmd) + '; echo "[exit=$?]"', timeout)
     return wsd("[Console]::OutputEncoding=[Text.Encoding]::UTF8\n"
                "$o=& ssh.exe -i (Join-Path $env:USERPROFILE '.ssh\\pve_claude') -o BatchMode=yes "
                "-o StrictHostKeyChecking=accept-new -o ConnectTimeout=10 %s '%s' 2>&1\n"
@@ -109,6 +125,15 @@ def main():
         src = a[0]; dst = a[1] if len(a) > 1 else r'C:\Users\auto\Desktop\in'
         name = os.path.basename(src)
         os.makedirs(XFER, exist_ok=True); shutil.copy(src, os.path.join(XFER, name))
+        if VIA != 'win':
+            d = dst.replace('\\', '/')
+            print(jump(
+                't=$(mktemp -d); ~/.local/bin/wsd get %s:imgxfer/%s "$t/%s" >/dev/null && '
+                '%sauto@%s %s && scp -q -o BatchMode=yes "$t/%s" %s; echo "[exit=$?]"; rm -rf "$t"'
+                % (SELF, name, name, SSH, VM_IP,
+                   shlex.quote('powershell -NoProfile -Command New-Item -ItemType Directory -Force "%s" | Out-Null' % dst),
+                   name, shlex.quote('auto@%s:%s/%s' % (VM_IP, d, name))), 600))
+            os.remove(os.path.join(XFER, name)); return
         print(wsd(
             "$t=Join-Path $env:TEMP 'aw-%s'; wsd get %s:imgxfer/%s $t | Out-Null;"
             "& ssh.exe -i (Join-Path $env:USERPROFILE '.ssh\\pve_claude') -o BatchMode=yes auto@%s "

@@ -25,7 +25,7 @@
 | 192.168.1.51 | pbs（VM 201） | Proxmox Backup Server，网页 :8007 |
 | 192.168.1.52 | auto-win（VM 202） | Windows 11 自动化操作机（微信、Bambu Studio 等） |
 | 192.168.1.53 | home-jump（CT 203，pve2） | 跳板机：wsd + ssh，Claude 从外面进家里网络的入口，见 [services/home-jump.md](services/home-jump.md) |
-| 192.168.1.117 | DESKTOP-0GE8DG9 | 家里的 Windows 台式机，装了 wsd，是远程操作家里网络的入口 |
+| 192.168.1.117 | DESKTOP-0GE8DG9 | 家里的 Windows 台式机，装了 wsd，是远程操作家里网络的**备用**入口（主入口是 home-jump） |
 | 192.168.1.155 | One-KVM | 网络 KVM（onecloud 刷机），目前接在 pve3 上 |
 
 ## 目录

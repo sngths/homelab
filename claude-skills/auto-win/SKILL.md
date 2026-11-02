@@ -52,5 +52,6 @@ aw ps "Get-Process bambu*"                       # 虚拟机里执行 PowerShell
 
 ## 链路（出问题时排查用）
 
-本机 → `wsd exec` 到 Windows 台式机 `DESKTOP-0GE8DG9`（192.168.1.117，必须开机）→ ssh 到 pve3（192.168.1.3，`vminput` 走 QMP 发键鼠、截屏）或 VM 202（OpenSSH）。
+本机 → `wsd exec` 到跳板机 `home-jump`（CT 203，pve2，192.168.1.53）→ ssh 到 pve3（192.168.1.3，`vminput` 走 QMP 发键鼠、截屏）或 VM 202（OpenSSH）。
+跳板机不通时 `AW_VIA=win aw ...` 改走备用的 Windows 台式机 `DESKTOP-0GE8DG9`（192.168.1.117）。
 工具源码：`~/projects/homelab/scripts/aw.py`、`scripts/vminput.py`（pve3 上是 `/usr/local/bin/vminput`）。

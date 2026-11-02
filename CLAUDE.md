@@ -9,7 +9,7 @@
 家里 PVE 集群和周边设备（NAS、One-KVM、Windows 台式机、Dokploy、PBS）的文档仓库，推送到 GitHub 私有仓库 `sngths/homelab`。
 
 - 先读 [README.md](README.md)：IP 分配表、目录、待办。
-- 访问家里设备的方法见 [runbooks/access.md](runbooks/access.md)：通过 wsd 连到 Windows 台式机 `DESKTOP-0GE8DG9`，再 SSH 或调用 API。
+- 访问家里设备的方法见 [runbooks/access.md](runbooks/access.md)：主入口是跳板机 `home-jump`（wsd exec 后 SSH）；备用入口是 Windows 台式机 `DESKTOP-0GE8DG9`。
 - 账号密码见 [credentials.md](credentials.md)（明文，这是用户的决定，仓库必须保持私有）。
 
 ## 约定
