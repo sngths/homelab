@@ -59,10 +59,17 @@ proxy 服务加了依赖：`/etc/systemd/system/proxmox-backup-proxy.service.d/n
 
 - 存储 `pbs`：server 192.168.1.51，datastore `nas`，`prune-backups keep-all=1`（保留策略交给 PBS 管）
 - 存储 `nas-pbs`：NFS 192.168.1.40:/volume1/pbs，只存放 PBS 的数据盘，不要放别的虚拟机磁盘
-- 备份任务 `daily-pbs`：每天 03:00，snapshot 模式，目前只备份 **VM 200（dokploy）**
+- 备份任务 `daily-pbs`：每天 03:00，snapshot 模式，备份 **VM 200 dokploy、VM 202 auto-win、CT 203 home-jump**（202、203 于 2026-11-02 加入）
 
 以后要给其他虚拟机加每日备份，修改 `daily-pbs` 任务的 vmid 列表就行（网页：数据中心 → 备份）。
 **pve4 上的虚拟机先不要加**，见 [../runbooks/pve4-freeze.md](../runbooks/pve4-freeze.md)。
+
+## 实测：首次加入的备份（2026-11-02）
+
+| 对象 | 磁盘 | 用时 | 结果 |
+|---|---|---|---|
+| CT 203 home-jump | 4G | 9 秒 | 921M 数据，压缩后 378M |
+| VM 202 auto-win（Windows，含 EFI、TPM 和 GVT-g 显卡，开机状态） | 150G | 6 分 53 秒 | 读取 150G，其中 75%（113G）是空白或重复块被复用，实际新写入约 37G |
 
 ## 实测（2026-11-01，VM 200，200G 磁盘）
 
