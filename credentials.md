@@ -18,6 +18,7 @@
 | VM 201 pbs（网页） | https://192.168.1.51:8007 | `root`（领域 Linux PAM） | `T8hDndkiDHqT` | PBS 管理界面 |
 | VM 201 pbs（系统） | 192.168.1.51（SSH / PVE 控制台） | `root` / `debian` | `T8hDndkiDHqT` | 两个账号同一个密码。debian 有 sudo，但不能登录 PBS 网页 |
 | VM 202 auto-win（Windows） | 192.168.1.52（远程桌面 / PVE 控制台） | `auto` | `6Xy55Wj0CWAa1` | 管理员，开机自动登录。Windows 未激活 |
+| CT 203 jump（跳板） | 192.168.1.53 | `root`；wsd 跑在普通用户 `jump` 下 | `h5EOr87uMJMt` | root 也可用 PVE 的密钥登录；`jump` 用户有自己的 SSH 密钥 `jump@homelab`（`/home/jump/.ssh/id_ed25519`） |
 
 ## 周边设备
 
