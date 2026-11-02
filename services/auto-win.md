@@ -86,7 +86,9 @@ vminput 202 scroll 3                    # 滚轮
 
 ## 待办
 
-- [ ] 用户提供：A1 打印机的 IP 和局域网访问码，或者登录 Bambu 账号
+- [x] 2026-11-02 登录拓竹账号 `sngths`（手机号 13045875254，短信验证码登录），同步了云端预设。
+  打印机 A1 设备名 `3DP-039-506`，带 AMS lite（4 槽），在"设备"页可看摄像头、温度、打印进度。
+  已选"不再提醒 Beta 版本更新"。
 - [x] 通过 Windows 更新升级到 25H2（2026-11-02）。方法：策略 `HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate` 设 `TargetReleaseVersion=1`、`ProductVersion=Windows 11`、`TargetReleaseVersionInfo=25H2`，再以 SYSTEM 计划任务调用 `Microsoft.Update.Session` COM 扫描 → 下载 → 安装（直接通过 SSH 调用会报 E_ACCESSDENIED）
 - [ ] Windows 激活（用户自己处理）
 - [ ] 外部控制工具接上 AI 视觉识别（截屏 → 找按钮 → 点击）

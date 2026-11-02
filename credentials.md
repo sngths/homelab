@@ -33,3 +33,7 @@
 |---|---|---|
 | SSH 密钥 `claude-pve-upgrade` | 私钥：Windows `C:\Users\tianxing\.ssh\pve_claude` | 免密 SSH 到 PVE 三台节点（root）、VM 200（ubuntu）、VM 201（debian） |
 | PBS API token `pve@pbs!pve` | PBS：`/root/pve-token.json`；PVE：`/etc/pve/priv/storage/pbs.pw` | PVE 往 PBS 写备份用 |
+
+## 拓竹（Bambu Lab）账号
+
+- 用户名 `sngths`，手机号 13045875254，用**短信验证码**登录，没有设密码。VM 202 的 Bambu Studio 已登录。
