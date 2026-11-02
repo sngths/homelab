@@ -1,9 +1,10 @@
-# 跳板机 jump（CT 203）
+# 跳板机 home-jump（CT 203）
 
 2026-11-02 创建。替代 Windows 台式机，作为 Claude 从外面进入家里网络的常驻入口。台式机保留为备用通道。
 
 | 项目 | 配置 |
 |---|---|
+| 主机名 | `home-jump`（也是它在 wsd 里的机器名）。用户 `jump`、密钥注释 `jump@homelab` 沿用原名 |
 | 位置 | pve2，LXC 非特权容器，`nesting=1`，开机自启 `startup order=1` |
 | 系统 | Debian 12（模板 `debian-12-standard_12.2-1`），软件源中科大，时区 Asia/Shanghai |
 | 资源 | 1 核、512M 内存 + 512M swap、4G 硬盘（local-lvm） |
