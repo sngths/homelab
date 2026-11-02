@@ -24,7 +24,6 @@
 | 115 | VM | pve2 | win11-download | 8 | 8G | 150G | |
 | 116 | VM | pve2 | win11 | 4 | 8G | 150G | |
 | 117 | VM | pve2 | gitlab | 4 | 4G | 100G | |
-| 118 | VM | pve2 | jump | 4 | 8G | 100G | |
 | 119 | VM | pve2 | win11-1 | 8 | 16G | 80G | |
 | 120 | VM | pve2 | win11-RL | 8 | 8G | 150G | |
 | 122 | VM | pve2 | debian-desktop | 8 | 32G | 300G | |
