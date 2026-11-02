@@ -86,6 +86,8 @@ vminput 202 scroll 3                    # 滚轮
 
 ## 本机一体化工具 aw（推荐）
 
+本机已链接到 `~/.local/bin/aw`，任意目录可用。其他 Claude 会话通过全局技能 `auto-win`（`~/.claude/skills/auto-win/SKILL.md`，仓库备份在 `claude-skills/auto-win/`）获得用法说明。
+
 [`scripts/aw.py`](../scripts/aw.py)，在本机运行，一次往返完成"动作 → 等待 → 截屏"，截屏约 1 秒。
 
 ```bash
