@@ -7,6 +7,9 @@
   vminput.py <vmid> move X Y               鼠标沿曲线移动到屏幕坐标 (X, Y)
   vminput.py <vmid> click X Y [left|right] [2]   移动后点击（可双击）
   vminput.py <vmid> scroll N               滚轮，正数向下
+  vminput.py <vmid> shot [x y w h] [zoom]  截屏为 /tmp/<vmid>.jpg（可裁剪、放大），输出 base64
+  vminput.py <vmid> seq "click 1 2" "wait 1.5" "type abc" "key ret" "shot"
+                                          一次执行多个动作（wait 秒数可带小数）
 屏幕尺寸用 --screen WxH 指定（默认 1280x800）。
 """
 import json, math, os, random, socket, sys, time
@@ -99,13 +102,25 @@ def click(qmp, button='left', times=1):
         time.sleep(random.uniform(0.08, 0.15))
 
 
-def main():
-    a = sys.argv[1:]
-    sw, sh = 1280, 800
-    if '--screen' in a:
-        i = a.index('--screen'); sw, sh = map(int, a[i + 1].split('x')); del a[i:i + 2]
-    vmid, op, rest = a[0], a[1], a[2:]
-    q = QMP(vmid)
+def shot(qmp, vmid, rest):
+    """用 QMP screendump 截屏，转 JPEG，可选裁剪 (x y w h) 和放大倍数，base64 输出到 stdout"""
+    import base64, io
+    from PIL import Image
+    ppm = '/tmp/vminput-%s.ppm' % vmid
+    qmp.cmd('screendump', {'filename': ppm})
+    im = Image.open(ppm).convert('RGB')
+    if len(rest) >= 4:
+        x, y, w, h = map(int, rest[:4])
+        im = im.crop((x, y, x + w, y + h))
+        z = float(rest[4]) if len(rest) > 4 else 1
+        if z != 1:
+            im = im.resize((int(w * z), int(h * z)), Image.LANCZOS)
+    buf = io.BytesIO(); im.save(buf, 'JPEG', quality=85)
+    open('/tmp/%s.jpg' % vmid, 'wb').write(buf.getvalue())
+    print('===SHOT===' + base64.b64encode(buf.getvalue()).decode() + '===END===')
+
+
+def run(q, vmid, op, rest, sw, sh):
     if op == 'type':
         type_text(q, rest[0])
     elif op == 'key':
@@ -116,6 +131,10 @@ def main():
         move(q, vmid, float(rest[0]), float(rest[1]), sw, sh)
         time.sleep(random.uniform(0.08, 0.2))
         click(q, rest[2] if len(rest) > 2 else 'left', int(rest[3]) if len(rest) > 3 else 1)
+    elif op == 'wait':
+        time.sleep(float(rest[0]))
+    elif op == 'shot':
+        shot(q, vmid, rest)
     elif op == 'scroll':
         n = int(rest[0])
         for _ in range(abs(n)):
@@ -124,6 +143,28 @@ def main():
             time.sleep(random.uniform(0.05, 0.12))
     else:
         raise SystemExit(__doc__)
+
+
+def main():
+    import shlex
+    a = sys.argv[1:]
+    sw, sh = 1280, 800
+    if '--screen' in a:
+        i = a.index('--screen'); sw, sh = map(int, a[i + 1].split('x')); del a[i:i + 2]
+    if len(a) < 2:
+        raise SystemExit(__doc__)
+    vmid, op, rest = a[0], a[1], a[2:]
+    q = QMP(vmid)
+    if op == 'seq':
+        for step in rest:
+            if step.startswith('type '):   # type 后面原样输入，不做 shell 拆分（保留反斜杠、引号、空格）
+                run(q, vmid, 'type', [step[5:]], sw, sh)
+            else:
+                p = shlex.split(step)
+                run(q, vmid, p[0], p[1:], sw, sh)
+            time.sleep(random.uniform(0.15, 0.35))
+    else:
+        run(q, vmid, op, rest, sw, sh)
 
 
 if __name__ == '__main__':

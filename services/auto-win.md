@@ -84,6 +84,27 @@ vminput 202 scroll 3                    # 滚轮
 - 在 PowerShell 窗口里单击会进入"选择"模式（标题出现"选择"），按 Esc 退出。
 - Bambu Studio 选打印机那一页，要点卡片右上角的勾选框，点图片没用。
 
+## 本机一体化工具 aw（推荐）
+
+[`scripts/aw.py`](../scripts/aw.py)，在本机运行，一次往返完成"动作 → 等待 → 截屏"，截屏约 1 秒。
+
+```bash
+python3 scripts/aw.py shot /tmp/aw.jpg                          # 全屏截图（1280x800）
+python3 scripts/aw.py shot /tmp/z.jpg --crop 250 90 640 60 1.5  # 裁剪并放大，看小字
+python3 scripts/aw.py do "click 115 48" "wait 2" "key ctrl-i" --wait 2 --shot /tmp/aw.jpg
+python3 scripts/aw.py do 'type C:\Users\auto\Desktop\in\a.stl' "key ret" --noshot
+python3 scripts/aw.py text "收纳盒"        # 中文：经剪贴板 Ctrl+V 粘贴到当前输入框
+python3 scripts/aw.py put ./model.stl      # 复制文件到虚拟机 C:\Users\auto\Desktop\in
+python3 scripts/aw.py ps "Get-Process"     # 虚拟机里执行管理命令
+```
+
+工作方式：我（Claude）截屏 → 看图找到按钮坐标 → 点击，循环进行；不需要另外装 AI 模型。
+
+- `text` 的原理：把文本写到虚拟机临时文件，触发计划任务 `aw-clip`（以 auto 交互身份运行隐藏的 PowerShell 执行 Set-Clipboard），再从外部按 Ctrl+V。
+  这是唯一会在虚拟机里短暂启动进程的操作。
+- Bambu Studio 首页搜索框是嵌入网页，**第一次点击只是激活，要再点一次**才能输入。
+- 2026-11-02 实测：传入 20mm 立方体 → 导入（Ctrl+I，文件名框输入完整路径）→ 切片单盘，全程外部键鼠完成。
+
 ## 待办
 
 - [x] 2026-11-02 登录拓竹账号 `sngths`（手机号 13045875254，短信验证码登录），同步了云端预设。
