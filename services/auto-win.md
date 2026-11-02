@@ -17,7 +17,7 @@
 | 项目 | 内容 |
 |---|---|
 | VMID / 名称 | 202 / auto-win，在 pve3 上，开机自启 |
-| 系统 | Windows 11 专业版 24H2 简体中文（官方镜像），**未激活**（用户自己处理） |
+| 系统 | Windows 11 专业版 **25H2**（build 26200.9711）简体中文，用 24H2 官方镜像安装后于 2026-11-02 通过 Windows 更新升级，**未激活**（用户自己处理） |
 | 配置 | 8 核 / 16G（关闭 balloon）/ 150G |
 | CPU | `host,hidden=1`（隐藏 KVM 特征） |
 | 硬盘 / 网卡 | SATA / Intel e1000e：用 Windows 自带驱动，不出现 "Red Hat VirtIO" 设备 |
@@ -87,7 +87,7 @@ vminput 202 scroll 3                    # 滚轮
 ## 待办
 
 - [ ] 用户提供：A1 打印机的 IP 和局域网访问码，或者登录 Bambu 账号
-- [ ] 通过 Windows 更新升级到 25H2，打补丁
+- [x] 通过 Windows 更新升级到 25H2（2026-11-02）。方法：策略 `HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate` 设 `TargetReleaseVersion=1`、`ProductVersion=Windows 11`、`TargetReleaseVersionInfo=25H2`，再以 SYSTEM 计划任务调用 `Microsoft.Update.Session` COM 扫描 → 下载 → 安装（直接通过 SSH 调用会报 E_ACCESSDENIED）
 - [ ] Windows 激活（用户自己处理）
 - [ ] 外部控制工具接上 AI 视觉识别（截屏 → 找按钮 → 点击）
 - [ ] 中文文字输入（微信等需要）：考虑剪贴板粘贴，或外部切换输入法后输入拼音
