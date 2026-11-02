@@ -47,7 +47,8 @@
 - [ ] 修改密码：PVE root（三台相同）、One-KVM（仍是出厂默认密码）、dokploy VM 的 ubuntu 用户、PBS 的 root 和 debian 用户
 - [x] 部署 PBS，VM 200 每日增量备份（2026-11-01）
 - [ ] 常用的虚拟机陆续加进 `daily-pbs` 备份任务
-- [ ] 清理不用的旧虚拟机（k8s 那一组、多个 win11 等）
+- [x] 清理旧虚拟机第一批（2026-11-02）：k8s 一组及配套、旧 jump、idea、llm-server、旧 Dokploy、mcp-server，共 15 台及其备份
+- [ ] 继续清理：剩下 7 台旧 Windows（100、101、115、116、119、120、124）和几台 Linux 桌面，等用户决定
 - [ ] pve3 安装 `intel-microcode`
 - [ ] pve3 热重启后认不到 NVMe 硬盘，待查（见 hardware/README.md），修好前重启要"关机 → 断电 → 开机"
 - [ ] pve4 若再死机：查 pve3 上的 `/var/log/netconsole-remote.log`，考虑跑 memtest
