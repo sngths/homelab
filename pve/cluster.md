@@ -79,3 +79,8 @@ AMD 消费级核显（pve2 的 780M、pve4 的 Vega）不支持切分，只能�
 - 2026-11-02：删除了 VM 118 `jump`（pve2，JumpServer v3.10.0 堡垒机，Debian 12，2024-04 从 VMware 迁来，2024-06 之后没再用过）
   及其 NAS 上的备份（4.3G），用户确认不再需要。它里面写死的 IP 是 192.168.1.50，和现在的 VM 200 冲突。
   家里的跳板改用新建的 CT 203 `home-jump`。
+- 2026-11-02：删除旧 k8s 集群及配套服务共 10 台虚拟机和它们在 NAS 上的备份（用户确认，内容事先只读检查过）：
+  - k8s：103 k8s-load-balancer、105 k8s-master01、106 k8s-worker03、107 k8s-worker01、108 k8s-worker02
+  - 配套：110 harbor、111 jenkins、113 prometheus、117 gitlab（只有 1 个仓库 tianxing/proto，已在 GitHub）、
+    123 minio（只有公开模型 mistral-7b-instruct-v0.2.Q4_K_M.gguf 和两个小脚本）
+  - 释放本地盘约 923G，NAS 约 358G。删除后 NAS 备份剩 18 份共 566G，NAS 剩余约 7.0T。

@@ -9,25 +9,15 @@
 | 100 | VM | pve3 | win11-script | 8 | 16G | 100G | |
 | 101 | VM | pve2 | win11-demo | 8 | 16G | 200G | |
 | 102 | VM | pve2 | debian | 4 | 16G | 16G | |
-| 103 | VM | pve3 | k8s-load-balancer | 2 | 2G | 50G | 旧 k8s 集群 |
 | 104 | VM | pve2 | debian-test | 4 | 2G | 50G | |
-| 105 | VM | pve2 | k8s-master01 | 4 | 4G | 50G | 旧 k8s 集群 |
-| 106 | VM | pve4 | k8s-worker03 | 8 | 16G | 160G | 旧 k8s 集群；NAS 上最新备份是 2026-10-01 |
-| 107 | VM | pve3 | k8s-worker01 | 8 | 16G | 160G | 旧 k8s 集群 |
-| 108 | VM | pve3 | k8s-worker02 | 8 | 16G | 160G | 旧 k8s 集群 |
 | 109 | VM | pve2 | jellyfin | 8 | 8G | 100G | |
-| 110 | VM | pve2 | harbor | 4 | 8G | 160G | |
-| 111 | VM | pve3 | jenkins | 4 | 4G | 50G | |
 | 112 | VM | pve4 | idea | 8 | 16G | 200G | NAS 上最新备份是 2026-10-01 |
-| 113 | VM | pve2 | prometheus | 2 | 4G | 100G | |
 | 114 | VM | pve2 | ubuntu | 8 | 16G | 250G | |
 | 115 | VM | pve2 | win11-download | 8 | 8G | 150G | |
 | 116 | VM | pve2 | win11 | 4 | 8G | 150G | |
-| 117 | VM | pve2 | gitlab | 4 | 4G | 100G | |
 | 119 | VM | pve2 | win11-1 | 8 | 16G | 80G | |
 | 120 | VM | pve2 | win11-RL | 8 | 8G | 150G | |
 | 122 | VM | pve2 | debian-desktop | 8 | 32G | 300G | |
-| 123 | VM | pve3 | minio | 2 | 4G | 100G | |
 | 124 | VM | pve3 | win11-code | 8 | 32G | 200G | |
 | 125 | LXC | pve2 | llm-server | 8 | 16G | 300G | 非特权容器 |
 | 126 | VM | pve2 | FabStation | 4 | 4G | 500G | |
