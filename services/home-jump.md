@@ -17,6 +17,6 @@
 ## 进度
 
 - [x] 创建容器、装基础包、建 `jump` 用户、生成密钥（2026-11-02）
-- [ ] 把 `jump@homelab` 公钥授权到 PVE 三台（root）、VM 200（ubuntu）、VM 201（debian）、VM 202（auto）
+- [x] `jump@homelab` 公钥已授权（2026-11-02，用户同意）：PVE 三台 root（`/etc/pve/priv/authorized_keys`）、VM 200 ubuntu、VM 201 debian、VM 202 auto（`C:\ProgramData\ssh\administrators_authorized_keys`）。已从跳板机实测全部能免密登录，pve3 上 `vminput` 也能调用
 - [ ] 用官方接入命令安装 wsd，用户扫码认领，开启"执行命令"
 - [ ] `aw` 等工具改为走 jump，Windows 台式机降为备用
