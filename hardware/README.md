@@ -57,6 +57,18 @@
 
 - NFS 导出 `/volume1/pve`，在 PVE 里叫存储 `nas`，挂载点 `/mnt/pve/nas`，只存备份。
 - 容量约 25T，2026-11-01 清理后剩余约 6.7T。
+- SSH 开在 22 端口（`tianxing` 账号，有 sudo），管理命令 `/usr/syno/sbin/synouser`、`synoshare`。DSM 7.2.2，会自动更新系统。
+- SMB：协议 SMB1~SMB3，NTLMv1 认证关闭。
+
+### 小米摄像头录像
+
+- 摄像头 192.168.1.137（MAC 78:DF:72:CD:5D:8E）通过 SMB 把录像写到 `surveillance/xiaomi_camera_videos/78DF72CD5D8E/`。
+- 录像范围 2024-12-11 ～ 2025-07-12，约 15760 个文件、2.1T。之后摄像头里的 NAS 存储配置丢失，停止上传（2026-11-03 发现）。
+- 2026-11-03 新建专用账号 `xiaomi-cam`（密码见 credentials.md）：只能读写 `surveillance`，应用权限只开 SMB。已用 smbclient 验证可写入、不能访问其他共享、不能登录 File Station。
+- 米家 App 里重新配置：摄像头 → 设置 → 存储设置 → NAS 网络存储，选 192.168.1.40，用 `xiaomi-cam` 登录，建议保留 30 天。
+- 如果摄像头登录不上，再考虑打开 NTLMv1（会降低 SMB 安全性）。
+- 局域网里还有一台 78:df:72 开头的设备 192.168.1.232，可能是第二个摄像头，未确认。
+- 群晖上目前**没有电影**：全盘搜到的大视频文件 99% 是监控录像，`video` 共享为空。旧 Jellyfin（VM 109）指向的 `/mnt/nas/data/nas1/3t/e/...` 已不存在。
 
 ## One-KVM — 192.168.1.155
 
