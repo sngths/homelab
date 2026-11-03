@@ -82,6 +82,21 @@
 - `backup` 共享占了 NAS 大部分空间（14T），用 ACL 权限模式，NFS 也导出给了 192.168.1.0/24。
 - 只读账号 `media-ro` 给 pve2 挂载用，见 [../services/jellyfin.md](../services/jellyfin.md)。
 
+## 路由器 — iStoreOS，192.168.1.1
+
+- iStoreOS 22.03.7（OpenWrt），x86_64。SSH 22 端口，`root` 登录（密码见 credentials.md）。
+- 装了 OpenClash 0.46.110、PassWall 4.78、PassWall2，**主开关都是关的**：家里设备上网全部直连，不做透明代理。
+- 7890 端口是 PassWall **服务端**（passwall_server，xray 入站），不是给局域网用的代理。
+
+### 局域网代理（2026-11-03 开启）
+
+- PassWall 只开了"Socks 服务"（`socks_enabled=1`），主开关 `enabled=0` 保持关闭，所以**只提供代理端口，不接管任何设备的流量**。
+- **SOCKS5：`192.168.1.1:1070`**，**HTTP：`192.168.1.1:1071`**，节点"日本-优化"（`4G9M7EQ1`，vmess），出口东京。
+- 用途：Jellyfin/MetaTube 刮削（FANZA 只认日本 IP）、家里机器下载 GitHub 等被墙的资源。
+- 改之前的配置备份在路由器 `/etc/config/passwall.bak-20261104`。
+- 节点来自 6 个机场订阅、共 30 个 vmess 节点；节点失效时在 PassWall 网页"Socks 配置"里换节点（备用：日本-优化2、日本-优化3）。
+- 已验证：经代理能访问 JavBus、FANZA、MGStage、GitHub；JavDB、AVBASE 对 curl 返回 Cloudflare 403。不走代理时出口仍是南京。
+
 ## One-KVM — 192.168.1.155
 
 - onecloud 刷的 One-KVM（kvmd 3.291），网页登录账号 admin（**默认密码未改**）。

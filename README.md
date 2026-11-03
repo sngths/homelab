@@ -16,7 +16,7 @@
 
 | IP | 设备 | 说明 |
 |---|---|---|
-| 192.168.1.1 | 路由器 | 网关、DNS |
+| 192.168.1.1 | 路由器 | 网关、DNS，iStoreOS；局域网代理 SOCKS5 :1070 / HTTP :1071（日本节点），见 [hardware/README.md](hardware/README.md) |
 | 192.168.1.2 | pve2 | PVE 节点，GMKtec NucBox K6 |
 | 192.168.1.3 | pve3 | PVE 节点，旧 Intel 小主机（2026-11-01 从坏掉的 M5 换过来） |
 | 192.168.1.4 | pve4 | PVE 节点，GMKtec NucBox M5 |
