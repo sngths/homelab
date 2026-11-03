@@ -59,7 +59,7 @@ proxy 服务加了依赖：`/etc/systemd/system/proxmox-backup-proxy.service.d/n
 
 - 存储 `pbs`：server 192.168.1.51，datastore `nas`，`prune-backups keep-all=1`（保留策略交给 PBS 管）
 - 存储 `nas-pbs`：NFS 192.168.1.40:/volume1/pbs，只存放 PBS 的数据盘，不要放别的虚拟机磁盘
-- 备份任务 `daily-pbs`：每天 03:00，snapshot 模式，备份 **VM 200 dokploy、VM 202 auto-win、CT 203 home-jump**（202、203 于 2026-11-02 加入）
+- 备份任务 `daily-pbs`：每天 03:00，snapshot 模式，备份 **VM 200 dokploy、VM 202 auto-win、CT 203 home-jump、CT 204 jellyfin**（202、203 于 2026-11-02 加入，204 于 2026-11-03 加入）
 
 以后要给其他虚拟机加每日备份，修改 `daily-pbs` 任务的 vmid 列表就行（网页：数据中心 → 备份）。
 **pve4 上的虚拟机先不要加**，见 [../runbooks/pve4-freeze.md](../runbooks/pve4-freeze.md)。

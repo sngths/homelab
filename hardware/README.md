@@ -75,7 +75,12 @@
 - 米家 App 里保留时长最多 12 个月，到期自动删除，NAS 不会无限增长。
 - 米家 App 配置位置：摄像头 → 设置 → 存储设置 → NAS 网络存储。
 - 如果以后摄像头登录不上 NAS，再考虑打开 NTLMv1（会降低 SMB 安全性）。
-- 群晖上目前**没有电影**：全盘搜到的大视频文件 99% 是监控录像，`video` 共享为空。旧 Jellyfin（VM 109）指向的 `/mnt/nas/data/nas1/3t/e/...` 已不存在。
+
+### 视频（Jellyfin 用）
+
+- 在 `backup` 共享的 `nas1/` 下（`/volume1/backup/nas1`，约 14T）：`video/` 11T、`3t/` 2.7T、`2t/` 432G、`suning/`、`picture/`。视频约 7500 个、13.6T。
+- `backup` 共享占了 NAS 大部分空间（14T），用 ACL 权限模式，NFS 也导出给了 192.168.1.0/24。
+- 只读账号 `media-ro` 给 pve2 挂载用，见 [../services/jellyfin.md](../services/jellyfin.md)。
 
 ## One-KVM — 192.168.1.155
 

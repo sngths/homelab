@@ -18,6 +18,8 @@
 | VM 201 pbs（网页） | https://192.168.1.51:8007 | `root`（领域 Linux PAM） | `T8hDndkiDHqT` | PBS 管理界面 |
 | VM 201 pbs（系统） | 192.168.1.51（SSH / PVE 控制台） | `root` / `debian` | `T8hDndkiDHqT` | 两个账号同一个密码。debian 有 sudo，但不能登录 PBS 网页 |
 | VM 202 auto-win（Windows） | 192.168.1.52（远程桌面 / PVE 控制台） | `auto` | `6Xy55Wj0CWAa1` | 管理员，开机自动登录。Windows 未激活 |
+| CT 204 jellyfin（系统） | 192.168.1.54（SSH / `pct enter 204`） | `root` | `xfS0933mpbe5` | 也可用 PVE 的密钥登录 |
+| Jellyfin 网页 | http://192.168.1.54:8096 | `tianxing` | `pbnlLDcxK7oMD2` | 管理员，2026-11-03 建 |
 | CT 203 home-jump（跳板） | 192.168.1.53 | `root`；wsd 跑在普通用户 `jump` 下 | `h5EOr87uMJMt` | root 也可用 PVE 的密钥登录；`jump` 用户有自己的 SSH 密钥 `jump@homelab`（`/home/jump/.ssh/id_ed25519`） |
 
 ## 周边设备
@@ -26,6 +28,7 @@
 |---|---|---|---|---|
 | One-KVM | https://192.168.1.155 | `admin` | `admin` | 出厂默认密码，建议修改 |
 | 群晖 NAS（DSM 网页） | http://192.168.1.40:5000 | `tianxing` | `Tx123456` | 大写 T、小写 x。2026-11-01 登录验证过。SSH（22 端口）也能用这个账号登录，有 sudo |
+| 群晖 NAS Jellyfin 只读账号 | SMB `\\192.168.1.40\backup` | `media-ro` | `GLt5rBlRnqkCFjAV` | 2026-11-03 建。只对 `backup` 共享只读（ACL）。pve2 上存在 `/root/.nas-media-ro.cred`，用于挂载 `/mnt/nas-backup` |
 | 群晖 NAS 摄像头专用账号 | SMB `\\192.168.1.40\surveillance` | `xiaomi-cam` | `4teKG9AaDlicwcEZ` | 2026-11-03 建。只能读写 `surveillance` 共享，应用权限只开 SMB（DSM、File Station 等全部拒绝），不能改密码。填在米家 App 摄像头的 NAS 存储设置里 |
 | 路由器 | http://192.168.1.1 | 待补充 | 待补充 | |
 

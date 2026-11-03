@@ -36,7 +36,7 @@ enterprise 和 ceph 源已注释掉。注意：pve3 的 pve 源在 `sources.list
 - 原来的每月备份任务 `backup-00133daf-2ec8`（每月 1 号 0 点，备份到 nas）**已于 2026-11-01 停用**，
   因为它和 pve4 死机有关（见 [../runbooks/pve4-freeze.md](../runbooks/pve4-freeze.md)）。
 - 2026-11-01 升级前做过一次全量备份；清理后 NAS 上每台虚拟机只保留最新一份（共 29 份，约 928G）。
-- **2026-11-01 起：每日增量备份到 PBS**（任务 `daily-pbs`，03:00，备份 VM 200 dokploy、202 auto-win、CT 203 home-jump），详见 [../services/pbs.md](../services/pbs.md)。
+- **2026-11-01 起：每日增量备份到 PBS**（任务 `daily-pbs`，03:00，备份 VM 200 dokploy、202 auto-win、CT 203 home-jump、CT 204 jellyfin），详见 [../services/pbs.md](../services/pbs.md)。
 - 手动备份 / 删除备份的注意事项：
   - 非特权 LXC 备份到 NFS 要加 `tmpdir=/var/tmp`，否则会失败。
   - 通过 API 批量删除 NAS 上的备份时要**一个一个删**，并发删除会出现 `cfs-lock 'storage-nas' ... timeout`。
@@ -91,3 +91,4 @@ AMD 消费级核显（pve2 的 780M、pve4 的 Vega）不支持切分，只能�
   最后使用 2025-09-15）、129 mcp-server（Windows 11，系统盘有 BitLocker，无法离线查看）及它们的 NAS 备份，用户确认直接删除。
   之后 NAS 备份剩 14 份共 485G，NAS 剩余约 7.3T；pve4 上只剩 127 ubuntu-desktop。
   注意：判断"孤立日志"时要用 `shopt -s nullglob` 收集匹配，`ls a* b*` 只要一个没匹配就返回失败，会误判。
+- 2026-11-03：删除 VM 109 `jellyfin`（pve2，Debian 12 + Jellyfin 10.9.8，2024-08 之后没开过机，视频都在 NAS 上），用户确认。改用新建的 CT 204，见 [../services/jellyfin.md](../services/jellyfin.md)。它在 NAS 上的备份（2026-11-01，10.9G）待用户确认是否删除。
