@@ -47,9 +47,31 @@
 - Jellyfin：**南京大学镜像** `https://mirrors.nju.edu.cn/jellyfin/debian`（`/etc/apt/sources.list.d/jellyfin.sources`），签名密钥 `/etc/apt/keyrings/jellyfin.gpg`，指纹 `4918AABC486CA052358D778D49023CD01DE21A7B`。
 - 官方源 repo.jellyfin.org 从家里下载只有约 10KB/s，装不动；清华、阿里、上交、中科大都没有 Jellyfin 镜像。
 
+## MetaTube 刮削（2026-11-03 装）
+
+给文件名带番号的视频抓封面、标题、演员、标签。分两部分，都在 CT 204 里：
+
+| 部分 | 说明 |
+|---|---|
+| 后端 `metatube-server` | v1.4.0，**从源码编译**（官方 v1.4.0 没发 Linux 程序包；源码提交 `c0e053f8` 已和 GitHub 标签核对一致）。程序 `/usr/local/bin/metatube-server`，systemd 服务 `metatube`，`metatube` 用户运行，只监听 `127.0.0.1:8080`，数据库 SQLite `/var/lib/metatube/metatube.db` |
+| 后端配置 | `/etc/default/metatube`：`TOKEN`（访问令牌）、`HTTP(S)_PROXY=socks5://192.168.1.1:1070`（路由器的日本节点代理，FANZA 只认日本 IP） |
+| Jellyfin 插件 | MetaTube 2025.1102.2200.0（官方最后一版，给 10.11 做的），在 12.4 上加载正常、搜索正常。目录 `/var/lib/jellyfin/plugins/MetaTube_2025.1102.2200.0/`，MD5 已按官方清单校验 |
+| 插件设置 | 后端 `http://127.0.0.1:8080` + 令牌；开启名称模板 `{number} {title}`；翻译关闭（标题是日文） |
+
+- 实测：FANZA、MGS、JAV321 都能返回结果和封面；JavBus、JavDB 等对 curl 有 Cloudflare 拦截。
+- **升级 Jellyfin 前先确认插件还兼容**。插件很久没更新，Jellyfin 大版本升级后可能失效。装插件前的配置备份在 `/root/jellyfin-before-metatube.tgz`（含 /etc/jellyfin、config、data、plugins）。
+- 这个容器**不能拍快照**（PVE 不支持带宿主机目录映射 mp0 的容器做快照），改动前用 tar 备份。
+- 媒体库"番号测试"：电影类型，元数据/图片只用 MetaTube，目前只含 `3t/e/download/170413` 一个目录，验证通过后再扩大范围。
+
+## 已知问题
+
+- `3t/e/系统镜像/` 里的系统安装 ISO 会被当成视频扫描，日志报 "Error opening UDF/ISO image"，不影响其他文件。
+- 第一次扫描很慢：要经 SMB 遍历约 3.5 万个文件/目录，Jellyfin 单核满载。期间重启 Jellyfin 会让扫描从头开始。
+
 ## 待做
 
-- [ ] 装 MetaTube 插件（JavScraper 的继任者），给文件名带番号的视频（约 2860 个、9.9T）刮削封面和信息，需要另跑后端服务，刮削要走代理。
+- [x] 装 MetaTube（2026-11-03，见上）
+- [ ] 测试库验证后，建正式的番号库覆盖 `nas1` 全部目录（约 2860 个带番号视频）
 - [ ] 清理 `nas1` 里的垃圾文件（需用户确认）：迅雷未完成文件 158 个约 497G，旧回收站残留约 25G，疑似重复文件约 720G。
 - [ ] 家里其他人如果也用 Jellyfin，给他们单独建账号，并且不开放这个媒体库。
 - [ ] 在外面看：用 Tailscale 之类组网，不开公网端口。
