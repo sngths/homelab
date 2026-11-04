@@ -7,7 +7,7 @@
 | 项目 | 值 |
 |---|---|
 | 位置 | pve2，CT 204 `jellyfin`，无特权 LXC，开机自启 |
-| 系统 | Debian 12，2 核、2G 内存（+512M swap）、32G 硬盘（local-lvm） |
+| 系统 | Debian 12，2 核、4G 内存（+1G swap）、32G 硬盘（local-lvm） |
 | 地址 | http://192.168.1.54:8096 |
 | 版本 | Jellyfin 12.4.0，jellyfin-ffmpeg8 8.1.3 |
 | 账号 | 管理员 `tianxing`，容器 root，密码都在 [../credentials.md](../credentials.md) |
@@ -66,6 +66,7 @@
 ## 已知问题
 
 - `3t/e/系统镜像/` 里的系统安装 ISO 会被当成视频扫描，日志报 "Error opening UDF/ISO image"，不影响其他文件。
+- 2026-11-03 第一次全库扫描到 77% 时，Jellyfin 内存超过 2G 被 OOM 杀掉，自动重启后扫描没有继续。2026-11-04 把内存调到 4G、swap 调到 1G（`pct set 204 --memory 4096 --swap 1024`，不用重启），并重新扫描。
 - 第一次扫描很慢：要经 SMB 遍历约 3.5 万个文件/目录，Jellyfin 单核满载。期间重启 Jellyfin 会让扫描从头开始。
 
 ## 待做

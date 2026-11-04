@@ -22,7 +22,7 @@
 | **200** | VM | pve3 | **dokploy** | 8 | 16G | 200G | **新的部署平台，开机自启，每日备份**，见 [../services/dokploy.md](../services/dokploy.md) |
 | **202** | VM | pve3 | **auto-win** | 8 | 16G | 150G | **Windows 11 自动化操作机，开机自启**，见 [../services/auto-win.md](../services/auto-win.md) |
 | **203** | LXC | pve2 | **home-jump** | 1 | 512M | 4G | **跳板机（Debian 12），开机自启（order=1）**，见 [../services/home-jump.md](../services/home-jump.md) |
-| **204** | LXC | pve2 | **jellyfin** | 2 | 2G | 32G | **Jellyfin 影音服务器，开机自启，每日备份，780M 核显转码**，见 [../services/jellyfin.md](../services/jellyfin.md) |
+| **204** | LXC | pve2 | **jellyfin** | 2 | 4G | 32G | **Jellyfin 影音服务器，开机自启，每日备份，780M 核显转码**，见 [../services/jellyfin.md](../services/jellyfin.md) |
 | **201** | VM | pve3 | **pbs** | 2 | 4G | 32G + 2T（NAS） | **备份服务器，开机自启**，见 [../services/pbs.md](../services/pbs.md) |
 
 ## 各节点分配情况（配置值合计）
