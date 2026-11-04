@@ -7,7 +7,7 @@
 | 项目 | 值 |
 |---|---|
 | 位置 | pve2，CT 204 `jellyfin`，无特权 LXC，开机自启 |
-| 系统 | Debian 12，2 核、4G 内存（+1G swap）、32G 硬盘（local-lvm） |
+| 系统 | Debian 12，8 核、4G 内存（+1G swap）、32G 硬盘（local-lvm） |
 | 地址 | http://192.168.1.54:8096 |
 | 版本 | Jellyfin 12.4.0，jellyfin-ffmpeg8 8.1.3 |
 | 账号 | 管理员 `tianxing`，容器 root，密码都在 [../credentials.md](../credentials.md) |
@@ -70,6 +70,7 @@
 ## 已知问题
 
 - 2026-11-03 第一次全库扫描到 77% 时，Jellyfin 内存超过 2G 被 OOM 杀掉，自动重启后扫描没有继续。2026-11-04 把内存调到 4G、swap 调到 1G（`pct set 204 --memory 4096 --swap 1024`，不用重启），并重新扫描。
+- 2026-11-04 为了加快刮削：容器从 2 核加到 8 核（`pct set 204 --cores 8`），`/etc/jellyfin/system.xml` 里 `LibraryScanFanoutConcurrency`、`LibraryMetadataRefreshConcurrency` 从 0（=核数）改成 8（改前备份 `system.xml.bak-20261104`）。新建影片从每分钟约 8 部提高到约 26 部。没再往上加，是怕并发太高被 FANZA 限流。
 - 第一次扫描很慢：要经 SMB 遍历约 3.5 万个文件/目录，Jellyfin 单核满载。期间重启 Jellyfin 会让扫描从头开始。
 
 ## 待做
