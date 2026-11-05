@@ -67,6 +67,16 @@
 - **升级 Jellyfin 前先确认插件还兼容**。插件很久没更新，Jellyfin 大版本升级后可能失效。装插件前的配置备份在 `/root/jellyfin-before-metatube.tgz`（含 /etc/jellyfin、config、data、plugins）。
 - 这个容器**不能拍快照**（PVE 不支持带宿主机目录映射 mp0 的容器做快照），改动前用 tar 备份。
 
+### 补刮（文件名里有番号、但没刮到的）
+
+- 原因：影片单独放在一个文件夹里时，Jellyfin 用**文件夹名**当片名去搜，像 `SSNI081MP4`、`ABP627CMP4` 这种 MetaTube 认不出番号；还有一些 FANZA 返回"资料不全"（500）。
+- 脚本（容器里 `/root/`，仓库 `scripts/`）：
+  1. `jellyfin-fixnum-dry.py`：从**文件名**提取番号去 MetaTube 搜，只记录番号完全一致的结果到 `/root/fixnum-dry.tsv`，不改任何东西。
+  2. `jellyfin-fixnum-apply.py`：按上面的结果调用 Jellyfin 的"识别"（`/Items/RemoteSearch/Apply`），来源优先 FANZA → MGS → JAV321，跳过把 480/720/1080/2160 当番号的误配（例如 `Big Dildo_1080p` 被认成 `DILDO-1080`）。
+  - 运行：在容器里 `JT=<Jellyfin 令牌> DRY=1 python3 -I /root/fixnum.py`，再 `JT=<令牌> python3 -I /root/fixnum-apply.py`。
+- 2026-11-05 跑过一次：修好 196 部（147 个作品）。约 6800 部没资料的是国产、推特、欧美等本来就没有番号的视频。
+- 定时扫描：从默认每 12 小时改成**每周六 20:00 UTC**（北京时间周日 04:00，避开 03:00 的 PBS 备份）。每次扫描都会把没资料的影片重新搜一遍，太频繁没意义。新下载了视频就在网页上手动扫描。
+
 ## 已知问题
 
 - 2026-11-03 第一次全库扫描到 77% 时，Jellyfin 内存超过 2G 被 OOM 杀掉，自动重启后扫描没有继续。2026-11-04 把内存调到 4G、swap 调到 1G（`pct set 204 --memory 4096 --swap 1024`，不用重启），并重新扫描。
