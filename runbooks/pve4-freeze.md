@@ -53,7 +53,7 @@ VM 106 已于 2026-11-02 删除；112 还在（pve4）。
   ```
 - netconsole：pve4 的内核消息实时通过 UDP 6666 发到 pve3
   - pve4：`netconsole.service`（`modprobe netconsole netconsole=6666@192.168.1.4/vmbr0,6666@192.168.1.3/30:bf:01:22:20:51`）
-  - pve3：`netconsole-recv.service`（socat），写到 `/var/log/netconsole-remote.log`，logrotate 每周轮转
+  - pve3：`netconsole-recv.service`（socat），写到 `/var/log/netconsole-remote.log`，logrotate 每周轮转（`/etc/logrotate.d/netconsole-remote`，必须写成多行格式；2026-11-06 修正前写成一行，导致 pve3 的 logrotate.service 一直失败）
   - **注意**：pve3 的网卡 MAC 改了的话，pve4 这边的配置也要跟着改
 
 ## 再次卡死时怎么查

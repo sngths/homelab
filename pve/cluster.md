@@ -17,7 +17,7 @@ deb https://mirrors.ustc.edu.cn/debian-security trixie-security main contrib non
 deb https://mirrors.ustc.edu.cn/proxmox/debian/pve trixie pve-no-subscription
 ```
 
-enterprise 和 ceph 源已注释掉。注意：pve3 的 pve 源在 `sources.list.d/pve-no-subscription.list`，pve2 / pve4 写在 `sources.list` 里。
+enterprise 和 ceph 源已注释掉。PVE 9 升级后多出的 `sources.list.d/pve-enterprise.sources`（deb822 格式）2026-11-06 在三台末尾加了 `Enabled: no`（原文件备份在 `/root/pve-enterprise.sources.bak-20261106`），之前每天的 apt update 都因 401 失败。注意：pve3 的 pve 源在 `sources.list.d/pve-no-subscription.list`，pve2 / pve4 写在 `sources.list` 里。
 
 ## 存储
 
