@@ -56,4 +56,5 @@
 - [ ] pve3 热重启后认不到 NVMe 硬盘，待查（见 hardware/README.md），修好前重启要"关机 → 断电 → 开机"
 - [ ] pve4 若再死机：查 pve3 上的 `/var/log/netconsole-remote.log`，考虑跑 memtest
 - [ ] pve4 硬盘空闲 57°C 左右，考虑加散热片
+- [ ] 异地组网（用户说后面再做）：路由器上开 WireGuard，用 Cloudflare 做 DDNS，iPhone 用小火箭按规则把 `192.168.1.0/24` 走 WireGuard。备用方案是 Tailscale，见 [hardware/README.md](hardware/README.md) 路由器一节
 - [ ] 不再需要时删除临时 SSH 密钥 `claude-pve-upgrade`（见 [runbooks/access.md](runbooks/access.md)）

@@ -85,6 +85,8 @@
 ## 路由器 — iStoreOS，192.168.1.1
 
 - iStoreOS 22.03.7（OpenWrt），x86_64。SSH 22 端口，`root` 登录（密码见 credentials.md）。
+- 外网：电信 PPPoE 拨号，**有公网 IPv4**（2026-11-07 为 `114.221.84.8`，重新拨号会变），另有公网 IPv6 前缀 /60。当天从外网 ping 并在 `pppoe-wan` 抓包确认，回包来自路由器本身。带宽约下行 200M、上行 50M。已装但没启用：WireGuard 内核模块、ZeroTier、DDNS 脚本（含 Cloudflare）、Lucky、DDNSTO。
+- 跳板机没有路由器的 SSH 密钥，目前只能用密码登录。
 - 装了 OpenClash 0.46.110、PassWall 4.78、PassWall2，**主开关都是关的**：家里设备上网全部直连，不做透明代理。
 - 7890 端口是 PassWall **服务端**（passwall_server，xray 入站），不是给局域网用的代理。
 
