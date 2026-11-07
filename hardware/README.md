@@ -87,6 +87,14 @@
 - iStoreOS 22.03.7（OpenWrt），x86_64。SSH 22 端口，`root` 登录（密码见 credentials.md）。
 - 外网：电信 PPPoE 拨号，**有公网 IPv4**（2026-11-07 为 `114.221.84.8`，重新拨号会变），另有公网 IPv6 前缀 /60。当天从外网 ping 并在 `pppoe-wan` 抓包确认，回包来自路由器本身。带宽约下行 200M、上行 50M。已装但没启用：WireGuard 内核模块、ZeroTier、DDNS 脚本（含 Cloudflare）、Lucky、DDNSTO。
 - 跳板机没有路由器的 SSH 密钥，目前只能用密码登录。
+- 实测速度（2026-11-07，跳板机直连）：下载约 240 Mbps（腾讯 CDN，10 线程），上传约 57 Mbps（Cloudflare，4 线程）。
+- **外网方向放行的端口**（IPv4 和 IPv6 都放行，wan 区默认 DROP，没有端口转发，UPnP 已关闭）：
+  | 端口 | 来源 | 说明 |
+  |---|---|---|
+  | 7890 TCP+UDP | PassWall 服务端（`PSW-SERVER` 链） | xray VLESS 入站，在运行 |
+  | 8897 TCP | 易有云 linkease（fw3 规则） | 在运行，当天看到有外部连接 |
+  | 18811 TCP | Lucky（`LUCKY` 链） | 没有程序监听 |
+- 从外网测 TCP 端口时注意：公司的测试环境会替任意 TCP 连接假应答，结果不能用，要在路由器上用 `tcpdump -ni pppoe-wan` 看包是否真的到达。ICMP 不受影响。
 - 装了 OpenClash 0.46.110、PassWall 4.78、PassWall2，**主开关都是关的**：家里设备上网全部直连，不做透明代理。
 - 7890 端口是 PassWall **服务端**（passwall_server，xray 入站），不是给局域网用的代理。
 
