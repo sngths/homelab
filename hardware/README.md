@@ -85,7 +85,7 @@
 ## 路由器 — iStoreOS，192.168.1.1
 
 - iStoreOS 22.03.7（OpenWrt），x86_64。SSH 22 端口，`root` 登录（密码见 credentials.md）。
-- 外网：电信 PPPoE 拨号，**有公网 IPv4**（2026-11-07 为 `114.221.84.8`，重新拨号会变），另有公网 IPv6 前缀 /60。当天从外网 ping 并在 `pppoe-wan` 抓包确认，回包来自路由器本身。带宽约下行 200M、上行 50M。已装但没启用：WireGuard 内核模块、ZeroTier、DDNS 脚本（含 Cloudflare）、Lucky、DDNSTO。
+- 外网：电信 PPPoE 拨号，**有公网 IPv4**（2026-11-07 为 `114.221.84.8`，重新拨号会变），另有公网 IPv6 前缀 /60。当天从外网 ping 并在 `pppoe-wan` 抓包确认，回包来自路由器本身。2026-11-08 在路由器临时开了 18080 测试网页，用户用**联通手机流量**打开成功，确认跨运营商可直接访问（测试页已关闭）。带宽约下行 200M、上行 50M。已装但没启用：WireGuard 内核模块、ZeroTier、DDNS 脚本（含 Cloudflare）、Lucky、DDNSTO。
 - 跳板机没有路由器的 SSH 密钥，目前只能用密码登录。
 - 实测速度（2026-11-07，跳板机直连）：下载约 240 Mbps（腾讯 CDN，10 线程），上传约 57 Mbps（Cloudflare，4 线程）。
 - **外网方向放行的端口**（IPv4 和 IPv6 都放行，wan 区默认 DROP，没有端口转发，UPnP 已关闭）：
