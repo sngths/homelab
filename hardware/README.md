@@ -93,7 +93,7 @@
   |---|---|---|
   | ~~7890 TCP+UDP~~ | PassWall 服务端（`PSW-SERVER` 链） | **2026-11-08 已关闭**（`passwall_server.global.enable=0`，备份 `/etc/config/passwall_server.bak-20261108`）。原来是 2024-09 建的 VLESS 入站，无 TLS、`accept_lan=1`，等于一个不加密的公网回家入口。和 OpenClash 的 7890（局域网 HTTP 代理，OpenClash 已关）不是一回事。关闭后局域网代理 1070/1071 实测正常 |
   | 8897 TCP | 易有云 linkease（fw3 规则） | 在运行，当天看到有外部连接 |
-  | 18811 TCP | Lucky（`LUCKY` 链） | 没有程序监听。Lucky 配置是加密存储的，读不出用途，需登录 Lucky 网页 `http://192.168.1.1:16601` 查看（账号见 credentials.md） |
+  | 18811 TCP | Lucky（`LUCKY` 链） | 没有程序监听。2026-11-09 查明：是 Lucky 内置 **FileBrowser（网页文件管理）** 模块的端口，模块已关闭（`Enable=false`），但开着"自动放行防火墙"（`AutoFirewall=true`），规则残留。Lucky 的端口转发、STUN、DDNS 都是空的；管理页不允许外网访问（`AllowInternetaccess=false`） |
 - 从外网测 TCP 端口时注意：公司的测试环境会替任意 TCP 连接假应答，结果不能用，要在路由器上用 `tcpdump -ni pppoe-wan` 看包是否真的到达。ICMP 不受影响。
 - 装了 OpenClash 0.46.110、PassWall 4.78、PassWall2，**主开关都是关的**：家里设备上网全部直连，不做透明代理。
 - 7890 端口原来是 PassWall **服务端**（passwall_server，xray 入站），不是给局域网用的代理；2026-11-08 已关闭，见上方端口表。
