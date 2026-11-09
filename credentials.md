@@ -31,7 +31,6 @@
 | 群晖 NAS Jellyfin 只读账号 | SMB `\\192.168.1.40\backup` | `media-ro` | `GLt5rBlRnqkCFjAV` | 2026-11-03 建。只对 `backup` 共享只读（ACL）。pve2 上存在 `/root/.nas-media-ro.cred`，用于挂载 `/mnt/nas-backup` |
 | 群晖 NAS 摄像头专用账号 | SMB `\\192.168.1.40\surveillance` | `xiaomi-cam` | `4teKG9AaDlicwcEZ` | 2026-11-03 建。只能读写 `surveillance` 共享，应用权限只开 SMB（DSM、File Station 等全部拒绝），不能改密码。填在米家 App 摄像头的 NAS 存储设置里 |
 | 路由器（iStoreOS） | http://192.168.1.1，SSH 22 | `root` | `8887387466` | 和 Dokploy 面板密码相同。2026-11-03 SSH 登录验证过 |
-| Lucky（路由器上） | http://192.168.1.1:16601 | `666` | `666` | 出厂默认，2026-11-09 验证。用接口登录时要带 `?_=` 时间校验参数，否则一律报密码错误 |
 
 ## 密钥和令牌（不是登录密码，一般不用手动处理）
 

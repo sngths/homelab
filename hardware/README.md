@@ -85,15 +85,15 @@
 ## 路由器 — iStoreOS，192.168.1.1
 
 - iStoreOS 22.03.7（OpenWrt），x86_64。SSH 22 端口，`root` 登录（密码见 credentials.md）。
-- 外网：电信 PPPoE 拨号，**有公网 IPv4**（2026-11-07 为 `114.221.84.8`，重新拨号会变），另有公网 IPv6 前缀 /60。当天从外网 ping 并在 `pppoe-wan` 抓包确认，回包来自路由器本身。2026-11-08 在路由器临时开了 18080 测试网页，用户用**联通手机流量**打开成功，确认跨运营商可直接访问（测试页已关闭）。带宽约下行 200M、上行 50M。已装但没启用：WireGuard 内核模块、ZeroTier、DDNS 脚本（含 Cloudflare）、Lucky、DDNSTO。
+- 外网：电信 PPPoE 拨号，**有公网 IPv4**（2026-11-07 为 `114.221.84.8`，重新拨号会变），另有公网 IPv6 前缀 /60。当天从外网 ping 并在 `pppoe-wan` 抓包确认，回包来自路由器本身。2026-11-08 在路由器临时开了 18080 测试网页，用户用**联通手机流量**打开成功，确认跨运营商可直接访问（测试页已关闭）。带宽约下行 200M、上行 50M。已装但没启用：WireGuard 内核模块、ZeroTier、DDNS 脚本（含 Cloudflare）、DDNSTO。
 - 跳板机没有路由器的 SSH 密钥，目前只能用密码登录。
 - 实测速度（2026-11-07，跳板机直连）：下载约 240 Mbps（腾讯 CDN，10 线程），上传约 57 Mbps（Cloudflare，4 线程）。
-- **外网方向放行的端口**（IPv4 和 IPv6 都放行，wan 区默认 DROP，没有端口转发，UPnP 已关闭）：
+- **外网方向放行的端口**（2026-11-09 起只剩易有云 8897，另有系统默认的 DHCP 68）（IPv4 和 IPv6 都放行，wan 区默认 DROP，没有端口转发，UPnP 已关闭）：
   | 端口 | 来源 | 说明 |
   |---|---|---|
   | ~~7890 TCP+UDP~~ | PassWall 服务端（`PSW-SERVER` 链） | **2026-11-08 已关闭**（`passwall_server.global.enable=0`，备份 `/etc/config/passwall_server.bak-20261108`）。原来是 2024-09 建的 VLESS 入站，无 TLS、`accept_lan=1`，等于一个不加密的公网回家入口。和 OpenClash 的 7890（局域网 HTTP 代理，OpenClash 已关）不是一回事。关闭后局域网代理 1070/1071 实测正常 |
   | 8897 TCP | 易有云 linkease（fw3 规则） | 在运行，当天看到有外部连接 |
-  | ~~18811 TCP~~ | Lucky（`LUCKY` 链） | **2026-11-09 已关闭**（关掉 FileBrowser 的 `AutoFirewall`，删除规则）。原来：没有程序监听。2026-11-09 查明：是 Lucky 内置 **FileBrowser（网页文件管理）** 模块的端口，模块已关闭（`Enable=false`），但开着"自动放行防火墙"（`AutoFirewall=true`），规则残留。Lucky 的端口转发、STUN、DDNS 都是空的；管理页不允许外网访问（`AllowInternetaccess=false`）。Lucky 所有功能都没有规则（定时任务、网络唤醒、反向代理、证书等全空），实际没在用；配置备份 `/root/lucky-config-bak-20261108.tgz` |
+  | ~~18811 TCP~~ | Lucky（`LUCKY` 链） | **2026-11-09 已关闭，Lucky 已整个卸载**（4 个包：lucky、luci-app-lucky、luci-i18n-lucky-zh-cn、app-meta-lucky；配置目录 `/etc/config/lucky.daji` 留着没删）（关掉 FileBrowser 的 `AutoFirewall`，删除规则）。原来：没有程序监听。2026-11-09 查明：是 Lucky 内置 **FileBrowser（网页文件管理）** 模块的端口，模块已关闭（`Enable=false`），但开着"自动放行防火墙"（`AutoFirewall=true`），规则残留。Lucky 的端口转发、STUN、DDNS 都是空的；管理页不允许外网访问（`AllowInternetaccess=false`）。Lucky 所有功能都没有规则（定时任务、网络唤醒、反向代理、证书等全空），实际没在用；配置备份 `/root/lucky-config-bak-20261108.tgz` |
 - 从外网测 TCP 端口时注意：公司的测试环境会替任意 TCP 连接假应答，结果不能用，要在路由器上用 `tcpdump -ni pppoe-wan` 看包是否真的到达。ICMP 不受影响。
 - 装了 OpenClash 0.46.110、PassWall 4.78、PassWall2，**主开关都是关的**：家里设备上网全部直连，不做透明代理。
 - 7890 端口原来是 PassWall **服务端**（passwall_server，xray 入站），不是给局域网用的代理；2026-11-08 已关闭，见上方端口表。
