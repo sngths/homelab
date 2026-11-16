@@ -88,7 +88,7 @@
 - 2026-11-16 把程序从 2023.8.2 换成官方 **2026.11.0**（SHA256 `51f7c68b…a51fd`，按官方发布页核对），套件外壳不变。旧程序备份 `/volume1/@appdata/cloudflared/cloudflared-2023.8.2.bak`。重启套件：`sudo /usr/syno/bin/synopkg restart cloudflared`（sudo 的 PATH 里没有 synopkg）。**以后套件中心若升级该套件，程序会被换回旧版**，需重新替换。
 - 隧道是从家里主动连出去的，不需要开防火墙端口，端口扫描查不出来。
 - 2026-11-16 用临时 API 令牌（只有 DNS 编辑权限，2026-11-23 过期，未入库）删除了 8 条指向本隧道、目标设备已不存在的 DNS 记录：video、lucky、win11、mac、casaos、gitlab、api、jenkins（`tcp`、`jump` 本来就没有 DNS 记录）。删除前的完整 DNS 备份：[../backups/cloudflare-dns-tianxing.site-20261116.json](../backups/cloudflare-dns-tianxing.site-20261116.json)。删除后这些名字落到通配记录 `*` → Vercel，不再进家里。同日令牌加了隧道权限后，隧道 `home` 的 ingress 也删了这 8 条（配置版本 94 → 95，NAS 上 cloudflared 已收到新配置）。删除前配置备份：[../backups/cloudflare-tunnel-home-config-v94-20261116.json](../backups/cloudflare-tunnel-home-config-v94-20261116.json)。同日按用户决定把 openwrt、xiaomi 两条（路由器后台）的隧道规则和 DNS 也删了（版本 95 → 96，备份 [../backups/cloudflare-tunnel-home-config-v95-20261116.json](../backups/cloudflare-tunnel-home-config-v95-20261116.json)），**隧道现在没有任何公网主机名**。套件按用户要求继续运行。
-- 隧道开着 `warp-routing`，并有私有网络路由 **`192.168.0.0/16` → home**：登录了该 Zero Trust 组织的 WARP 客户端可以访问整个家里内网（是否在用、谁能加入组织待确认）。
+- 隧道开着 `warp-routing`，并有私有网络路由 **`192.168.0.0/16` → home**：登录了该 Zero Trust 组织的 WARP 客户端可以访问整个家里内网。2026-11-16 用户决定**保留**；谁能加入组织还没查（需要 Access 相关权限）。
 - 同一帐户下还有别的隧道（`08988457-…`：code-lab、dist、expo-dev、livekit、msg-gw、us-net、wecom-bridge；`f218c1dc-…`：work），不在家里，没动。
 - 当天的 12 条公网规则（域名 `tianxing.site`）：
 

@@ -56,6 +56,8 @@
 - [ ] pve3 热重启后认不到 NVMe 硬盘，待查（见 hardware/README.md），修好前重启要"关机 → 断电 → 开机"
 - [ ] pve4 若再死机：查 pve3 上的 `/var/log/netconsole-remote.log`，考虑跑 memtest
 - [ ] pve4 硬盘空闲 57°C 左右，考虑加散热片
-- [ ] **Cloudflare 隧道清理**（NAS 上，见 hardware/README.md）：公网主机名已全部删除（2026-11-16）；确认 WARP 私有网络路由 192.168.0.0/16 是否在用；改路由器 root 密码
-- [ ] 异地组网（用户说后面再做）：路由器上开 WireGuard，用 Cloudflare 做 DDNS，iPhone 用小火箭按规则把 `192.168.1.0/24` 走 WireGuard。备用方案是 Tailscale，见 [hardware/README.md](hardware/README.md) 路由器一节
+- [x] Cloudflare 隧道清理（2026-11-16）：NAS 上 cloudflared 升级到 2026.11.0，隧道 `home` 的 10 条公网主机名和 DNS 全部删除，见 hardware/README.md
+- [ ] 改路由器 root 密码（纯数字，且和 Dokploy 面板相同；路由器后台曾经通过隧道暴露在公网）
+- [ ] Cloudflare Zero Trust：确认谁能加入组织（WARP 私有网络路由 `192.168.0.0/16` → home 按用户要求保留）
+- [ ] 异地组网（用户说后面再做；也可考虑直接用已有的 Cloudflare WARP 私有网络路由）：路由器上开 WireGuard，用 Cloudflare 做 DDNS，iPhone 用小火箭按规则把 `192.168.1.0/24` 走 WireGuard。备用方案是 Tailscale，见 [hardware/README.md](hardware/README.md) 路由器一节
 - [ ] 不再需要时删除临时 SSH 密钥 `claude-pve-upgrade`（见 [runbooks/access.md](runbooks/access.md)）
