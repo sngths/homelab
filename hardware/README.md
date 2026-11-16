@@ -82,6 +82,26 @@
 - `backup` 共享占了 NAS 大部分空间（14T），用 ACL 权限模式，NFS 也导出给了 192.168.1.0/24。
 - 只读账号 `media-ro` 给 pve2 挂载用，见 [../services/jellyfin.md](../services/jellyfin.md)。
 
+### Cloudflare 隧道（cloudflared 套件）
+
+- 2026-11-16 发现。SynoCommunity 的 Cloudflared 套件，令牌模式（`tunnel run --token`，令牌在 `/var/packages/cloudflared/var/token`），tunnelID `42b310cb-b4d6-4589-a54f-41729f8adfb9`。**规则在 Cloudflare 后台**（Zero Trust → Networks → Tunnels），本地改不了。日志 `/volume1/@appdata/cloudflared/cloudflared.log`。
+- 2026-11-16 把程序从 2023.8.2 换成官方 **2026.11.0**（SHA256 `51f7c68b…a51fd`，按官方发布页核对），套件外壳不变。旧程序备份 `/volume1/@appdata/cloudflared/cloudflared-2023.8.2.bak`。重启套件：`sudo /usr/syno/bin/synopkg restart cloudflared`（sudo 的 PATH 里没有 synopkg）。**以后套件中心若升级该套件，程序会被换回旧版**，需重新替换。
+- 隧道是从家里主动连出去的，不需要开防火墙端口，端口扫描查不出来。
+- 当天的 12 条公网规则（域名 `tianxing.site`）：
+
+  | 域名 | 指向 | 状态 |
+  |---|---|---|
+  | openwrt、xiaomi | `http://192.168.1.1`（路由器后台） | **公网能直接打开 LuCI 登录页，没有 Access 保护** |
+  | jump | `http://192.168.1.50`（dokploy VM 200） | 在线，返回 404 |
+  | video | `http://192.168.2.162:8096` | 设备不存在 |
+  | lucky | `http://192.168.1.163:16601` | 设备不存在 |
+  | win11 / tcp | `rdp://`、`tcp://192.168.1.135:3389` | 设备不存在 |
+  | mac | `tcp://192.168.1.108:7864` | 设备不存在 |
+  | casaos | `http://192.168.1.207` | 设备不存在 |
+  | gitlab | `https://gitlab.tianxing.site`（192.168.1.33） | 设备不存在 |
+  | api | `http://192.168.1.24` | 设备不存在 |
+  | jenkins | `http://192.168.1.32:8080` | 设备不存在 |
+
 ## 路由器 — iStoreOS，192.168.1.1
 
 - iStoreOS 22.03.7（OpenWrt），x86_64。SSH 22 端口，`root` 登录（密码见 credentials.md）。
