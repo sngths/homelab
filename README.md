@@ -56,6 +56,6 @@
 - [ ] pve3 热重启后认不到 NVMe 硬盘，待查（见 hardware/README.md），修好前重启要"关机 → 断电 → 开机"
 - [ ] pve4 若再死机：查 pve3 上的 `/var/log/netconsole-remote.log`，考虑跑 memtest
 - [ ] pve4 硬盘空闲 57°C 左右，考虑加散热片
-- [ ] **Cloudflare 隧道清理**（NAS 上，见 hardware/README.md）：DNS 已删（2026-11-16），隧道里 9 条 ingress 规则待删（需隧道权限）；路由器后台（openwrt、xiaomi）暴露在公网，要删掉或加 Access；改路由器 root 密码
+- [ ] **Cloudflare 隧道清理**（NAS 上，见 hardware/README.md）：失效的 8 条 DNS 和隧道规则已删（2026-11-16）；路由器后台（openwrt、xiaomi）暴露在公网，要删掉或加 Access；改路由器 root 密码
 - [ ] 异地组网（用户说后面再做）：路由器上开 WireGuard，用 Cloudflare 做 DDNS，iPhone 用小火箭按规则把 `192.168.1.0/24` 走 WireGuard。备用方案是 Tailscale，见 [hardware/README.md](hardware/README.md) 路由器一节
 - [ ] 不再需要时删除临时 SSH 密钥 `claude-pve-upgrade`（见 [runbooks/access.md](runbooks/access.md)）
