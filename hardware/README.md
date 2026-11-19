@@ -141,3 +141,11 @@
 
 - 装了 wsd（workspaced），开启了"执行命令"，是从外面操作家里网络的入口。
 - 有 OpenSSH 客户端，临时密钥在 `C:\Users\tianxing\.ssh\pve_claude`。
+
+### 访问公司网络（易有云 + Clash Verge，2026-11-19）
+
+- 易有云客户端在这台电脑上建了 WireGuard 网卡 `easetun`，公司网段 `172.20.x.x` 走它。
+- 域名解析：路由器 `/etc/dnsmasq.conf` 第 38 行 `address=/zczy.ai/172.20.21.146`，所有 `*.zczy.ai` 都解析到这个 IP（之前就有，不是这次加的）。另外 Windows hosts 里有 `172.20.21.107 security-admin.zczy.com`。
+- 坑：**Clash Verge Rev（2.5.10）开 TUN 时会接管 DNS**（网卡 `Meta`，DNS `198.18.0.2`，返回 fake-ip），`*.zczy.ai` 解析成 `198.18.x.x`，不走易有云，域名打不开；用 IP 访问正常。关掉 TUN 后正常（2026-11-19 实测解析到 `172.20.21.146`，curl 能连上）。
+- 已在全局覆写配置 `%APPDATA%\io.github.clash-verge-rev.clash-verge-rev\profiles\Merge.yaml` 加了例外（备份 `Merge.yaml.bak-20261119`）：TUN `route-exclude-address: 172.20.0.0/16`；`zczy.ai`/`zczy.com`/`zczy100.com` 加进 `fake-ip-filter`，并用 `nameserver-policy` 交给路由器 192.168.1.1 解析；`hosts` 里补了 `security-admin.zczy.com`。订阅本身已有 `DOMAIN-SUFFIX,zczy.ai,DIRECT` 规则。
+- 覆写要在 Clash Verge 里重新加载订阅（或重启软件）才生效。**开 TUN 后的效果还没实测**。
